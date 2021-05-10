@@ -55,6 +55,24 @@
     <ClCompile Include="Data Structures\Queue.cpp">
       <Filter>Data Structures</Filter>
     </ClCompile>
+    <ClCompile Include="Rovers\M_Rover.cpp">
+      <Filter>Rovers</Filter>
+    </ClCompile>
+    <ClCompile Include="Missions\E_Mission.cpp">
+      <Filter>Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="Missions\M_Mission.cpp">
+      <Filter>Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="Missions\P_Mission.cpp">
+      <Filter>Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="Rovers\E_Rover.cpp">
+      <Filter>Rovers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rovers\P_Rover.cpp">
+      <Filter>Rovers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MasterStation\MasterStation.h">
@@ -83,6 +101,24 @@
     </ClInclude>
     <ClInclude Include="Data Structures\Queue.h">
       <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Rovers\M_Rover.h">
+      <Filter>Rovers</Filter>
+    </ClInclude>
+    <ClInclude Include="Missions\E_Mission.h">
+      <Filter>Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="Missions\M_Mission.h">
+      <Filter>Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="Missions\P_Mission.h">
+      <Filter>Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rovers\E_Rover.h">
+      <Filter>Rovers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rovers\P_Rover.h">
+      <Filter>Rovers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

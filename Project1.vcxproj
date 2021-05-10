@@ -145,7 +145,13 @@
     <ClCompile Include="Events\Mount_Event.cpp" />
     <ClCompile Include="Events\Polar_Event.cpp" />
     <ClCompile Include="MasterStation\MasterStation.cpp" />
+    <ClCompile Include="Missions\E_Mission.cpp" />
     <ClCompile Include="Missions\Mission.cpp" />
+    <ClCompile Include="Missions\M_Mission.cpp" />
+    <ClCompile Include="Missions\P_Mission.cpp" />
+    <ClCompile Include="Rovers\E_Rover.cpp" />
+    <ClCompile Include="Rovers\M_Rover.cpp" />
+    <ClCompile Include="Rovers\P_Rover.cpp" />
     <ClCompile Include="Rovers\Rover.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="UI.h" />
@@ -158,7 +164,13 @@
     <ClInclude Include="Events\Mount_Event.h" />
     <ClInclude Include="Events\Polar_Event.h" />
     <ClInclude Include="MasterStation\MasterStation.h" />
+    <ClInclude Include="Missions\E_Mission.h" />
     <ClInclude Include="Missions\Mission.h" />
+    <ClInclude Include="Missions\M_Mission.h" />
+    <ClInclude Include="Missions\P_Mission.h" />
+    <ClInclude Include="Rovers\E_Rover.h" />
+    <ClInclude Include="Rovers\M_Rover.h" />
+    <ClInclude Include="Rovers\P_Rover.h" />
     <ClInclude Include="Rovers\Rover.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

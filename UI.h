@@ -18,7 +18,7 @@ struct UI {    //struct because delspec works with it
 
 	void ReadRoverSpeeds(){ } //in case of constant speeds
 
-	void Read_N_missions(){ }
+	void Read_N_missions(){  }
 
 
 	void Read_Checkup_Durations(){}
