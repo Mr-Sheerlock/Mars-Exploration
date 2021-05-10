@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="MasterStation">
+      <UniqueIdentifier>{7233f905-402d-4e2f-b45b-62d05858dbb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{f65718a7-8acf-4fcf-8cf7-5b3f7bc0de54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{c7fad96b-f5ca-4b3d-9cf1-bf95bc6b59ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rovers">
+      <UniqueIdentifier>{1997b1af-6639-4d21-9d1e-3590f9e753b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Missions">
+      <UniqueIdentifier>{24ba450b-b0f8-4a7b-8751-7fd3b81976ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data Structures">
+      <UniqueIdentifier>{e262ea2a-21c2-4dd5-b207-828519bb6046}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.h">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterStation\MasterStation.cpp">
+      <Filter>MasterStation</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\Em_Event.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\Mount_Event.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\Polar_Event.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Missions\Mission.cpp">
+      <Filter>Missions</Filter>
+    </ClCompile>
+    <ClCompile Include="Rovers\Rover.cpp">
+      <Filter>Rovers</Filter>
+    </ClCompile>
+    <ClCompile Include="Data Structures\Priority_Queue.cpp">
+      <Filter>Data Structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Data Structures\Queue.cpp">
+      <Filter>Data Structures</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MasterStation\MasterStation.h">
+      <Filter>MasterStation</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\Em_Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\Mount_Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\Polar_Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Missions\Mission.h">
+      <Filter>Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rovers\Rover.h">
+      <Filter>Rovers</Filter>
+    </ClInclude>
+    <ClInclude Include="Data Structures\Priority_Queue.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Data Structures\Queue.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
