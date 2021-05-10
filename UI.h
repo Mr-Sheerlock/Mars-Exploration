@@ -35,6 +35,7 @@ struct UI {    //struct because delspec works with it
 
 	}
 
+	void PrintCurrentDay(){}
 
 	void PrintOutput() {
 
