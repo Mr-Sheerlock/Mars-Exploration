@@ -1,5 +1,5 @@
 #pragma once
-class P_Rovers
+class P_Rover
 {
 };
 

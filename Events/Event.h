@@ -5,6 +5,6 @@ class Event {
 
 
 	
-	virtual void blabla() = 0;
+	virtual void Execute() = 0;
 
 };

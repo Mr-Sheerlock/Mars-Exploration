@@ -34,26 +34,11 @@
     <ClCompile Include="MasterStation\MasterStation.cpp">
       <Filter>MasterStation</Filter>
     </ClCompile>
-    <ClCompile Include="Events\Em_Event.cpp">
-      <Filter>Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Events\Mount_Event.cpp">
-      <Filter>Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Events\Polar_Event.cpp">
-      <Filter>Events</Filter>
-    </ClCompile>
     <ClCompile Include="Missions\Mission.cpp">
       <Filter>Missions</Filter>
     </ClCompile>
     <ClCompile Include="Rovers\Rover.cpp">
       <Filter>Rovers</Filter>
-    </ClCompile>
-    <ClCompile Include="Data Structures\Priority_Queue.cpp">
-      <Filter>Data Structures</Filter>
-    </ClCompile>
-    <ClCompile Include="Data Structures\Queue.cpp">
-      <Filter>Data Structures</Filter>
     </ClCompile>
     <ClCompile Include="Rovers\M_Rover.cpp">
       <Filter>Rovers</Filter>
@@ -73,21 +58,15 @@
     <ClCompile Include="Rovers\P_Rover.cpp">
       <Filter>Rovers</Filter>
     </ClCompile>
+    <ClCompile Include="Data Structures\Queue.cpp">
+      <Filter>Data Structures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MasterStation\MasterStation.h">
       <Filter>MasterStation</Filter>
     </ClInclude>
-    <ClInclude Include="Events\Em_Event.h">
-      <Filter>Events</Filter>
-    </ClInclude>
     <ClInclude Include="Events\Event.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="Events\Mount_Event.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="Events\Polar_Event.h">
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="Missions\Mission.h">
@@ -95,12 +74,6 @@
     </ClInclude>
     <ClInclude Include="Rovers\Rover.h">
       <Filter>Rovers</Filter>
-    </ClInclude>
-    <ClInclude Include="Data Structures\Priority_Queue.h">
-      <Filter>Data Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="Data Structures\Queue.h">
-      <Filter>Data Structures</Filter>
     </ClInclude>
     <ClInclude Include="Rovers\M_Rover.h">
       <Filter>Rovers</Filter>
@@ -119,6 +92,24 @@
     </ClInclude>
     <ClInclude Include="Rovers\P_Rover.h">
       <Filter>Rovers</Filter>
+    </ClInclude>
+    <ClInclude Include="Data Structures\PNode.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Data Structures\Priority_Queue.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Data Structures\Queue.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\C_Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\F_Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\P_Event.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

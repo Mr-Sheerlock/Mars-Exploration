@@ -139,11 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Data Structures\Priority_Queue.cpp" />
     <ClCompile Include="Data Structures\Queue.cpp" />
-    <ClCompile Include="Events\Em_Event.cpp" />
-    <ClCompile Include="Events\Mount_Event.cpp" />
-    <ClCompile Include="Events\Polar_Event.cpp" />
     <ClCompile Include="MasterStation\MasterStation.cpp" />
     <ClCompile Include="Missions\E_Mission.cpp" />
     <ClCompile Include="Missions\Mission.cpp" />
@@ -157,12 +153,13 @@
     <ClCompile Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data Structures\PNode.h" />
     <ClInclude Include="Data Structures\Priority_Queue.h" />
     <ClInclude Include="Data Structures\Queue.h" />
-    <ClInclude Include="Events\Em_Event.h" />
+    <ClInclude Include="Events\C_Event.h" />
     <ClInclude Include="Events\Event.h" />
-    <ClInclude Include="Events\Mount_Event.h" />
-    <ClInclude Include="Events\Polar_Event.h" />
+    <ClInclude Include="Events\F_Event.h" />
+    <ClInclude Include="Events\P_Event.h" />
     <ClInclude Include="MasterStation\MasterStation.h" />
     <ClInclude Include="Missions\E_Mission.h" />
     <ClInclude Include="Missions\Mission.h" />
