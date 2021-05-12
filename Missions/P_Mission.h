@@ -1,5 +1,6 @@
 #pragma once
-class P_Missions
+#include"Mission.h"
+class P_Mission :Mission
 {
 };
 

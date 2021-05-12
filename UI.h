@@ -21,7 +21,7 @@ struct UI {    //struct because delspec works with it
 	void Read_N_missions(){  }
 
 
-	void Read_Checkup_Durations(){}
+	void Read_Checkup_Durations(){ }
 
 
 	//////////////////////////////////OUTPUT FUNCTIONS//////////////////////////////
@@ -45,5 +45,15 @@ struct UI {    //struct because delspec works with it
 }U_I ;   //create a one global instant of the class as per the singleton technique
 		 //(we don't need more than that)
 
+
+//Some extra definition(s)
+
+enum OUTPUT_MODE {
+
+	INTERACTIVE,
+	STEP,
+	SILENT
+
+};
 
 #endif 

@@ -1,5 +1,7 @@
 #pragma once
-class M_Missions
+#include"Mission.h"
+
+class M_Mission :Mission
 {
 };
 

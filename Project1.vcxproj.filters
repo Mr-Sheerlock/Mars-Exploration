@@ -1,15 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="MasterStation">
       <UniqueIdentifier>{7233f905-402d-4e2f-b45b-62d05858dbb1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{f65718a7-8acf-4fcf-8cf7-5b3f7bc0de54}</UniqueIdentifier>
     </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{c7fad96b-f5ca-4b3d-9cf1-bf95bc6b59ab}</UniqueIdentifier>
@@ -23,17 +16,15 @@
     <Filter Include="Data Structures">
       <UniqueIdentifier>{e262ea2a-21c2-4dd5-b207-828519bb6046}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{153efd78-1dc2-46b1-a927-076d23e973f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UI.h">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="MasterStation\MasterStation.cpp">
-      <Filter>MasterStation</Filter>
-    </ClCompile>
     <ClCompile Include="Missions\Mission.cpp">
       <Filter>Missions</Filter>
     </ClCompile>
@@ -58,11 +49,14 @@
     <ClCompile Include="Rovers\P_Rover.cpp">
       <Filter>Rovers</Filter>
     </ClCompile>
+    <ClCompile Include="MasterStation.cpp">
+      <Filter>MasterStation</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MasterStation\MasterStation.h">
-      <Filter>MasterStation</Filter>
-    </ClInclude>
     <ClInclude Include="Events\Event.h">
       <Filter>Events</Filter>
     </ClInclude>
@@ -107,6 +101,12 @@
     </ClInclude>
     <ClInclude Include="Events\Promotion Event.h">
       <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterStation.h">
+      <Filter>MasterStation</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

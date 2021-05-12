@@ -1,5 +1,5 @@
 
-#include"Data Structures/Priority_Queue.h"
+#include "MasterStation.h"
 #include <iostream>
 using namespace std;
 
@@ -9,9 +9,14 @@ using namespace std;
 //I think some counter of days or somehting? 
 
 int main() {
-	int days;
+	MasterStation MS;
 
-	//UI.takenumberofDAys?
+	for (int i = 0; i < 100; i++) {
+		MS.ExecuteDay();
+
+	}
+
+	MS.FinalOutput();
 	
 }
 
