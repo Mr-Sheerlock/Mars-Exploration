@@ -54,6 +54,17 @@ public:
 		return true;
 	}
 
+	
+	~Queue()
+	{
+		T temp;
+		while (dequeue(T));
+	}
+};
+
+
+
+#pragma region Retrieve
 	/*bool Retrieve(T item)
 	{
 		Node<T>* L, * N;
@@ -83,11 +94,4 @@ public:
 		}
 		return false;
 	}*/
-
-	~Queue()
-	{
-		T temp;
-		while (dequeue(T));
-	}
-};
-
+#pragma endregion

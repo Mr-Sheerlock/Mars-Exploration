@@ -5,7 +5,12 @@ class Cancel_Event : Event {
 	
 public:
 	
-	Cancel_Event(){}
+	Cancel_Event(int ed, int id): Event (ed, id){}
+	~Cancel_Event();
 
-	void Execute();
+	void Execute() {
+
+
+			
+	}
 };

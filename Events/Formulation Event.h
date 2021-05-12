@@ -14,8 +14,13 @@ class Formulation_Event : Event {
 
 public:
 
-	Formulation_Event(){}
-
+	Formulation_Event(int ed, int id, char typ, int tloc, int mdur, int sig) : Event (ed,id )
+	{
+		type = typ;
+		Target_Location = tloc;
+		Mission_Duration = mdur;
+		Significance = sig;
+	}
 
 	//should we make the return type of execute Mission pointer ? 
 	void Execute() {

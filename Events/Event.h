@@ -8,6 +8,11 @@ class Event {
 
 public:
 
+	Event(int ed, int id) {
+		EventDay= ed;
+		ID = id;
+	}
+
 	//should we make the return type of execute Mission pointer  ? 
 	virtual void Execute() = 0;
 
