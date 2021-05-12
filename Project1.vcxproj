@@ -152,6 +152,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data Structures\Node.h" />
     <ClInclude Include="Data Structures\PNode.h" />
     <ClInclude Include="Data Structures\Priority_Queue.h" />
     <ClInclude Include="Data Structures\Queue.h" />

@@ -108,5 +108,8 @@
     <ClInclude Include="UI.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Data Structures\Node.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
