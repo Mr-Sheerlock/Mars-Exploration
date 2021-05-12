@@ -58,9 +58,6 @@
     <ClCompile Include="Rovers\P_Rover.cpp">
       <Filter>Rovers</Filter>
     </ClCompile>
-    <ClCompile Include="Data Structures\Queue.cpp">
-      <Filter>Data Structures</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MasterStation\MasterStation.h">
@@ -102,13 +99,13 @@
     <ClInclude Include="Data Structures\Queue.h">
       <Filter>Data Structures</Filter>
     </ClInclude>
-    <ClInclude Include="Events\C_Event.h">
+    <ClInclude Include="Events\Cancellation Event.h">
       <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="Events\F_Event.h">
+    <ClInclude Include="Events\Formulation Event.h">
       <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="Events\P_Event.h">
+    <ClInclude Include="Events\Promotion Event.h">
       <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
