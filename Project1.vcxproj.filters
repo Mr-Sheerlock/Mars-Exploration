@@ -55,6 +55,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Events\Event.h">
@@ -110,6 +113,18 @@
     </ClInclude>
     <ClInclude Include="Data Structures\Node.h">
       <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Data Structures\Data Structure Headers.h">
+      <Filter>Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\Event Headers.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Missions\Mission Headers.h">
+      <Filter>Missions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rovers\Rovers Headers.h">
+      <Filter>Rovers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

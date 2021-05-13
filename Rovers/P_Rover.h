@@ -7,7 +7,7 @@ public:
 	P_Rover(int id, float s);
 	~P_Rover();
 	void static Set_CheckupD(int CheckD);
-	int GetCheckupD();
+	static int GetCheckupD();
 
 private:
 	int static CP; //checkup duration in days

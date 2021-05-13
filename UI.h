@@ -14,28 +14,36 @@ struct UI {    //struct because delspec works with it
 
 	///////////////////////////////////INPUT FUNCTIONS//////////////////////////////
 
-	void ReadRovers( ){}
+	void ReadRoversNumbers(ifstream& Input, int& M, int& P, int& E);
 
-	void ReadRoverSpeeds(){  } //in case of constant speeds
+	int ReadRoverSpeeds(ifstream& Input); //returns the speed of each rover
 
-	void Read_N_missions(){  }
+	void Read_N_CheckupDur(ifstream& Input, int& N, int& CM, int& CP, int& CE); //number of missions before checkup and the checkup duration of each type
 
+	int Read_AutoP(ifstream& Input);
 
-	void Read_Checkup_Durations(){ }
+	int Read_EventsNum(ifstream& Input);
+
+	char ReadEventsTyp(ifstream& Input);
+
+	void Read_Formulation(ifstream& Input, char& Rover_Typ, int& ED, int& ID, int& TLOC, int& MDUR, int& SIG);
+
+	void Read_Promotion(ifstream& Input, int& ED, int& ID);
+
+	void Read_Cancellation(ifstream& Input, int& ED, int& ID);
 
 
 	//////////////////////////////////OUTPUT FUNCTIONS//////////////////////////////
 	
 
 	
-	
-	void PrinEndDay() {  //the total prints we need to do at the end of eachDay
-		//use many functions here: like PrintPolar() PrintMountainious () PrintEmergency
-		//as needed
+	//What we print to the output file at the end of each day
+	//Note: change the input names if you want :))
+	void PrintEachDay(int CD, int ID, int FD, int WD, int ED ) { 
+
 
 	}
 
-	void PrintCurrentDay(){}
 
 	void PrintOutput() {
 

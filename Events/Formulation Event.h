@@ -1,9 +1,11 @@
+#pragma once
+
 #include "Event.h"
 #include "../Missions/M_Mission.h"
 #include "../Missions/P_Mission.h"
 #include "../Missions/E_Mission.h"
 
-class Formulation_Event : Event {
+class Formulation_Event : public  Event {
 
 	char type;  //subject to change into a code or somehting 
 	int Target_Location; //in kilometers

@@ -1,7 +1,7 @@
 #pragma once
 #include"Mission.h"
 
-class M_Mission :Mission
+class M_Mission : public Mission
 {
 	int static AutoP;
 

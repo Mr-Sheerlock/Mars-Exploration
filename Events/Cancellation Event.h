@@ -1,6 +1,7 @@
+#pragma once 
 #include"Event.h"
 
-class Cancel_Event : Event {
+class Cancel_Event : public  Event {
 	
 	
 public:

@@ -1,5 +1,6 @@
-//Abstract Class
+#pragma once
 
+//Abstract Class
 
 class Event {
 
@@ -15,5 +16,8 @@ public:
 
 	//should we make the return type of execute Mission pointer  ? 
 	virtual void Execute() = 0;
+
+	int getEventDay() { return EventDay; }
+	int getID() { return ID; }
 
 };

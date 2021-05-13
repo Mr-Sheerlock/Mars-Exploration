@@ -22,7 +22,7 @@ public:
 
 	bool IsEmpty()
 	{
-		return Head = nullptr;
+		return Head == nullptr;
 	}
 
 	bool Enqueue(T item)
@@ -43,10 +43,11 @@ public:
 		}
 	}
 
-	bool dequeue(T& item)
+	bool Dequeue(T& item)
 	{
 		if (IsEmpty())
 			return false;
+
 		item = Head->getitem();
 		Node<T>* temp = Head->getNext();
 		delete Head;
@@ -58,7 +59,8 @@ public:
 	~Queue()
 	{
 		T temp;
-		while (dequeue(T));
+
+		while (Dequeue(temp));
 	}
 };
 

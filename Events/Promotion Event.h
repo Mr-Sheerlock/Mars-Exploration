@@ -1,7 +1,9 @@
+#pragma once
+
 #include "Event.h"
 
 
-class Promotion_Event : Event {
+class Promotion_Event : public  Event {
 
 
 
@@ -12,5 +14,5 @@ public:
 	{
 	}
 
-	void Execute();
+	void Execute(){}
 };
