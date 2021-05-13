@@ -13,11 +13,11 @@ int main() {
 	//Read input
 	MS.ReadInputFile();
 
+
 	/*for (int i = 0; i < 100; i++) {
 		MS.ExecuteDay();
 
 	}
 
 	MS.FinalOutput();*/
-	
 }

@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Event.h"
-#include "../Missions/M_Mission.h"
-#include "../Missions/P_Mission.h"
-#include "../Missions/E_Mission.h"
+#include "../Missions/Mission Headers.h"
+
 
 class Formulation_Event : public  Event {
 
@@ -27,19 +26,19 @@ public:
 	//should we make the return type of execute Mission pointer ? 
 	void Execute() {
 		Mission* newMission;
-		if(type== 'M'){
-			//newMission = new M_Mission();
+		/*if(type== 'M'){
+			newMission = new M_Mission;
 		}
 		else 
 		if (type=='P'){
-			//newMission = new P_Mission();
+			newMission = new P_Mission;
 		
 		}
 		else 
 		if (type == 'E') {
 
-			//newMission = new E_Mission();
-		}
+			newMission = new E_Mission();
+		}*/
 
 		
 

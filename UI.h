@@ -56,6 +56,8 @@ struct UI {    //struct because delspec works with it
 
 //Some extra definition(s)
 
+
+
 enum OUTPUT_MODE {
 
 	INTERACTIVE,

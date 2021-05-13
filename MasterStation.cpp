@@ -3,11 +3,18 @@
 MasterStation::MasterStation()
 {
 	IO_Interface = new UI();
+	N_Missions = 0;
+
+
+	//Lists
+
 	EventList = new Queue<Event*>();
-	Av_M_Rovers = new PriorityQueue<M_Rover*>();
+
+	Av_M_Rovers = new PriorityQueue<M_Rover*>(); //According to speed
 	Av_P_Rovers = new PriorityQueue<P_Rover*>();
 	Av_E_Rovers = new PriorityQueue<E_Rover*>();
-	N_Missions = 0;
+
+
 }
 
 
@@ -83,7 +90,7 @@ void MasterStation::ReadAutoP()
 {
 	int AutoP;
 	AutoP = IO_Interface->Read_AutoP(Input); //  mountainou waiting rovers list
-	M_Mission::setAutoP(AutoP);
+	M_Mission::SetAutoP(AutoP);
 }
 
 void MasterStation::ReadEvents()
@@ -139,7 +146,8 @@ void MasterStation::ExecuteDay() {
 
 		//Proposed Order: Events->Rovers Arrival->Rovers Checkup-> Rovers Maintainance->
 		//->Missions Assignment
-
+	
+	//1-Check if there are Any Events O(1)
 
 	
 }
