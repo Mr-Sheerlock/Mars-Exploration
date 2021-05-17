@@ -13,9 +13,10 @@ class Formulation_Event : public  Event {
 
 	int Significance;
 
+
 public:
 
-	Formulation_Event(int ed, int id, char typ, int tloc, int mdur, int sig) : Event (ed,id )
+	Formulation_Event(int ed, int id, char typ, int tloc, int mdur, int sig ) : Event(ed, id)
 	{
 		type = typ;
 		Target_Location = tloc;
@@ -24,25 +25,22 @@ public:
 	}
 
 	//should we make the return type of execute Mission pointer ? 
-	void Execute() {
-		Mission* newMission;
-		if(type== 'M'){
-			//newMission = new M_Mission( ID, EventDay, Target_Location, Mission_Duration, Significance);
-
-		}
-		else 
-		if (type=='P'){
-			//newMission = new P_Mission();
-		
-		}
-		else 
-		if (type == 'E') {
-
-			//newMission = new E_Mission();
-		}
+	bool Execute(MasterStation* MS) {
 
 		
+		if (type == 'P') {
+			P_Mission* newMission = new P_Mission(getID(), getEventDay(), Target_Location, Mission_Duration, Significance);
+			MS->ReturnWaitingPolar()->Enqueue(newMission);
 
+		}
+		else
+			if (type == 'E') {
+				int tempPriority=2; //temporarily 
+				E_Mission* newMission = new E_Mission(getID(), getEventDay(), Target_Location, Mission_Duration, Significance, tempPriority);
+				MS->ReturnWaitingEmerg()->Enqueue(newMission, tempPriority);
+
+			}
+		return true;
 	}
 
 };

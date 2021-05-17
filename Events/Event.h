@@ -1,6 +1,10 @@
 #pragma once
-
 //Abstract Class
+
+#include "../MasterStation.h"
+
+
+class MasterStation;
 
 class Event {
 
@@ -14,7 +18,8 @@ public:
 		ID = id;
 	}
 
-	virtual void Execute() = 0;
+	virtual bool Execute(MasterStation* MS) = 0;
+	
 
 	int getEventDay() { return EventDay; }
 	int getID() { return ID; }

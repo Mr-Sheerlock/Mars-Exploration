@@ -1,9 +1,8 @@
 #pragma once
 
 #include "UI.h"
-
 #include "Data Structures/Data Structure Headers.h"
-#include "Events/Event Headers.h"
+#include "Events/Event.h"
 #include "Missions/Mission Headers.h"
 #include "Rovers/Rovers Headers.h"
 
@@ -28,10 +27,18 @@ class MasterStation {
 	PriorityQueue<P_Rover*>* Av_P_Rovers; //available polar rovers
 	PriorityQueue<E_Rover*>* Av_E_Rovers; //available emergency rovers
 
+	PriorityQueue<E_Mission*>* Waiting_E_Missions; 
+	Queue<P_Mission*>* Waiting_P_Missions;  
 
 public:
 	MasterStation();
 	
+	//Data member getters
+	PriorityQueue<E_Mission*>* ReturnWaitingEmerg();
+	Queue<P_Mission*>* ReturnWaitingPolar();
+
+
+
 
 	//////////Input///////
 	void ReadInputFile();

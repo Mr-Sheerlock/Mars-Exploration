@@ -1,4 +1,5 @@
 #include "MasterStation.h"
+#include "Events/Event Headers.h"
 
 MasterStation::MasterStation()
 {
@@ -16,6 +17,22 @@ MasterStation::MasterStation()
 
 
 }
+
+
+
+
+////////Data member Getters
+
+PriorityQueue<E_Mission*>* MasterStation::ReturnWaitingEmerg()
+{
+	return Waiting_E_Missions;
+}
+
+Queue<P_Mission*>* MasterStation::ReturnWaitingPolar()
+{
+	return Waiting_P_Missions;
+}
+
 
 
 /////////////////////////////////////////INPUT////////////////////////////////////////////////
