@@ -3,6 +3,8 @@
 
 #include <fstream>
 #include <iostream>
+#include <Windows.h>
+
 
 using namespace std;
 
@@ -32,38 +34,67 @@ struct UI {    //struct because delspec works with it
 
 	void Read_Cancellation(ifstream& Input, int& ED, int& ID);
 
+	
+	//From Console
+	void ReadUserChoice(int& choice);
+	
 
 	//////////////////////////////////OUTPUT FUNCTIONS//////////////////////////////
 	
-
+	//1-To File:
 	
 	//What we print to the output file at the end of each day
-	//Note: change the input names if you want :))
-	void PrintEachDay(int CD, int ID, int FD, int WD, int ED ) { 
+	void WriteEachDay(int CD, int ID, int FD, int WD, int ED, ofstream& Output);
+	
+	void WriteHeader(ofstream& Output);
+	
+	void WriteMissions(int M_Mission, int E_Mission, int P_Mission, ofstream& Output );
+	
+	void WriteRovers(int M_Rover, int E_Rover, int P_Rover, ofstream& Output);
+	
+	void WriteStats( int Avg_Wait, int Avg_Exec, int Auto_P, ofstream& Output);
 
 
-	}
+	//2-To Console:
+
+	//prints the given parameter according to the format specified for emergency
+	void PrintEmergency(int* E, int count);
+
+	//prints the given parameter according to the format specified for mountainous
+	void PrintMount(int* M, int count);
+
+	//prints the given parameter according to the format specified for polar
+	void PrintPolar(int* P, int count);
+
+	//prints the given parameter according to the format specified for Missions/Rovers
+	void PrintMissionsAndRovers(int* M, int* R, int count, char type);
 
 
-	void PrintOutput() {
+	void PrintBreakLine();
 
-	}
+	void PrintInExecution(int* M, int* R, int count, int cE, int cM, int cP, char* type);
+
+	void PrintInCheckup(int* R, int count, int cE, int cM, int cP, char* type);
+
+	//where int*counts is an array of all counts needed in his part
+	void PrintOutput(int CD, int* WE, int* WM, int* WP, int* InM, int* InR, char* Intype, int* AvE, int* AvM, int* AvP, int* InCR, char* InCtype, int* CE, int* CM, int* CP, int* counts);
+
+	void InteractiveMode(int CD, int* WE, int* WM, int* WP, int* InM, int* InR, char* Intype, int* AvE, int* AvM, int* AvP, int* InCR, char* InCtype, int* CE, int* CM, int* CP, int* counts);
+
+	void StepByStepMode(int CD, int* WE, int* WM, int* WP, int* InM, int* InR, char* Intype, int* AvE, int* AvM, int* AvP, int* InCR, char* InCtype, int* CE, int* CM, int* CP, int* counts);
+
+	void SilentMode();
+
+
+
+
 
 
 }U_I ;   //create a one global instant of the class as per the singleton technique
 		 //(we don't need more than that)
 
 
-//Some extra definition(s)
 
 
-
-enum OUTPUT_MODE {
-
-	INTERACTIVE,
-	STEP,
-	SILENT
-
-};
 
 #endif 

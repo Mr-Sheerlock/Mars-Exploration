@@ -6,6 +6,13 @@ class E_Mission : public Mission
 
 	int MissionPriority;     //Priority assigned according to priority Eqn
 
+	//Pvalue= Formulation Day, Target Location, Mission Duration, Significance 
+
+
+
+	// = Sig*(2* TLOC+ 5*MDUR) -2*FD 
+
+
 	Rover* Assigned_Rover;   
 
 public: 

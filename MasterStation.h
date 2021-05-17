@@ -18,8 +18,9 @@ class MasterStation {
 	int N_Rovers;
 	int N_Mount, N_Polar, N_Emerg;
 	UI* IO_Interface;
-	ifstream Input;
 
+	ifstream Input;
+	ofstream Output;
 
 	/////////////////////////////////////////Lists///////////////////////////////////////
 
@@ -39,15 +40,51 @@ public:
 	void ReadCheckupInfo();
 	void ReadAutoP();
 	void ReadEvents();
-	void ExecuteDay(); 
 
 
 
 	/////////Output///////
-	void PrintDay();
+	void PrintEachDay();   //still not done
+		
 	void FinalOutput();
 
 
+	/////////////Operation/////////////
+
+	void ExecuteDay(); 
+
+	//Notice that here, we need to scheme the order of operation so as to not miss anything
+
+		//Proposed Order: Events->Rovers Arrival->Rovers Checkup-> Rovers Maintainance->
+		//->Missions Assignment
+
+	void ExecuteEvent();
+
+
+	
+	void Checkfailed(); //loops on the in-execution missions and applies the probability and sees if the misson(s) has failed 
+
+	void AutoPromote();
+
+
+
+	void CheckRoverArrived();
+
+
+
+	///////////////////////////////////////////
+	void CheckupComplete();
+
+
+	void Maint_Complete();  //Maintainance Completion Check
+
+
+	void AssignMission();
+
+
+
+
+	void CalculateStats();
 
 
 

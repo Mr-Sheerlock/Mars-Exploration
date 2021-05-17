@@ -12,6 +12,11 @@ class Rover
 
 	int Health; //used for maintainance
 
+
+	/////// Health Eqn
+
+	////////
+
 public:
 	Rover(int, int);
 	~Rover();

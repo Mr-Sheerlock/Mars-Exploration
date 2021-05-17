@@ -26,19 +26,20 @@ public:
 	//should we make the return type of execute Mission pointer ? 
 	void Execute() {
 		Mission* newMission;
-		/*if(type== 'M'){
-			newMission = new M_Mission;
+		if(type== 'M'){
+			//newMission = new M_Mission( ID, EventDay, Target_Location, Mission_Duration, Significance);
+
 		}
 		else 
 		if (type=='P'){
-			newMission = new P_Mission;
+			//newMission = new P_Mission();
 		
 		}
 		else 
 		if (type == 'E') {
 
-			newMission = new E_Mission();
-		}*/
+			//newMission = new E_Mission();
+		}
 
 		
 

@@ -5,6 +5,7 @@ MasterStation::MasterStation()
 	IO_Interface = new UI();
 	N_Missions = 0;
 
+	Output.open("Output.txt");
 
 	//Lists
 
@@ -139,6 +140,7 @@ void MasterStation::ReadEvents()
 
 
 
+////////////////////////////////////////////Operation//////////////////////////////////////////
 
 void MasterStation::ExecuteDay() {
 	
@@ -151,6 +153,14 @@ void MasterStation::ExecuteDay() {
 
 	
 }
+
+
+
+////
+//void MasterStation::Exe
+
+
+
 
 MasterStation::~MasterStation()
 {
