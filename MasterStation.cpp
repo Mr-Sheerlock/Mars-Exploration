@@ -11,8 +11,7 @@ MasterStation::MasterStation()
 
 	EventList = new Queue<Event*>();
 
-	Av_M_Rovers = new PriorityQueue<M_Rover*>(); //According to speed
-	Av_P_Rovers = new PriorityQueue<P_Rover*>();
+	Av_P_Rovers = new PriorityQueue<P_Rover*>(); //According to speed
 	Av_E_Rovers = new PriorityQueue<E_Rover*>();
 
 
@@ -29,7 +28,6 @@ void MasterStation::ReadInputFile()
 	{
 		ReadRovers();
 		ReadCheckupInfo();
-		ReadAutoP();
 		ReadEvents();
 		Input.close();
 	}
@@ -48,15 +46,7 @@ void MasterStation::ReadRovers()
 
 	N_Rovers = N_Mount + N_Polar + N_Emerg; //Total number of rovers
 	int speed;
-	for (int i = 0; i < N_Mount; i++)
-	{
-		//create new Mountainous rover and set its ID
-		//add it in the queue
-		speed = IO_Interface->ReadRoverSpeeds(Input);
-		M_Rover* New_M_Rover = new M_Rover(UniqueID, speed);
-		Av_M_Rovers->Enqueue(New_M_Rover, speed);
-		UniqueID++;
-	}
+	
 	for (int i = 0; i < N_Polar; i++)
 	{
 		//create new Mountainous rover and set its ID
@@ -82,16 +72,8 @@ void MasterStation::ReadCheckupInfo()
 	int N, CM, CP, CE;
 	IO_Interface->Read_N_CheckupDur(Input, N, CM, CP, CE);
 	Rover::setN(N);
-	M_Rover::Set_CheckupD(CM);
 	P_Rover::Set_CheckupD(CP);
 	E_Rover::Set_CheckupD(CE);
-}
-
-void MasterStation::ReadAutoP()
-{
-	int AutoP;
-	AutoP = IO_Interface->Read_AutoP(Input); //  mountainou waiting rovers list
-	M_Mission::SetAutoP(AutoP);
 }
 
 void MasterStation::ReadEvents()
@@ -114,20 +96,7 @@ void MasterStation::ReadEvents()
 			Formulation_Event* newFormEv = new Formulation_Event(ED, ID, Rover_Typ,   TLOC, MDUR, SIG);
 			EventList->Enqueue(newFormEv);
 		}
-		else if (TYP == 'X')
-		{
-			IO_Interface->Read_Cancellation(Input, ED, ID);
-			//create a new Cancel_Event event and add it in the EventList
-			Cancel_Event* newCancEv = new Cancel_Event(ED, ID);
-			EventList->Enqueue(newCancEv);
-		}
-		else if (TYP == 'P')
-		{
-			IO_Interface->Read_Promotion(Input, ED, ID);
-			//create a new Cancel_Event event and add it in the EventList
-			Promotion_Event* newPromEv = new Promotion_Event(ED, ID);
-			EventList->Enqueue(newPromEv);
-		}
+		
 	}
 
 }

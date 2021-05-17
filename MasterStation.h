@@ -25,7 +25,6 @@ class MasterStation {
 	/////////////////////////////////////////Lists///////////////////////////////////////
 
 	Queue<Event*>* EventList;
-	PriorityQueue<M_Rover*>* Av_M_Rovers; //available mountainous rovers
 	PriorityQueue<P_Rover*>* Av_P_Rovers; //available polar rovers
 	PriorityQueue<E_Rover*>* Av_E_Rovers; //available emergency rovers
 
@@ -38,13 +37,12 @@ public:
 	void ReadInputFile();
 	void ReadRovers();
 	void ReadCheckupInfo();
-	void ReadAutoP();
 	void ReadEvents();
 
 
 
 	/////////Output///////
-	void PrintEachDay();   //still not done
+	void PrintEachDay();  
 		
 	void FinalOutput();
 
@@ -64,7 +62,6 @@ public:
 	
 	void Checkfailed(); //loops on the in-execution missions and applies the probability and sees if the misson(s) has failed 
 
-	void AutoPromote();
 
 
 
