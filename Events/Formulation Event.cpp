@@ -1,5 +1,6 @@
 #include "Formulation Event.h"
-
+#include "../MasterStation.h"
+class MasterStation;
 
 Formulation_Event::Formulation_Event(int ed, int id, char typ, int tloc, int mdur, int sig) : Event(ed, id) {
 

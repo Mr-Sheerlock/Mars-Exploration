@@ -3,9 +3,8 @@
 #include "UI.h"
 #include "Data Structures/Data Structure Headers.h"
 #include "Missions/Mission Headers.h"
-#include "Events/Event.h"
 #include "Rovers/Rovers Headers.h"
-
+class Event;
 
 
 
@@ -16,7 +15,12 @@ class MasterStation {
 	int N_Missions;
 	int N_Rovers;
 	int N_Mount, N_Polar, N_Emerg;
+	int C_Day;
+
+
+
 	UI* IO_Interface;
+
 
 	ifstream Input;
 	ofstream Output;
@@ -82,7 +86,7 @@ public:
 		//->Missions Assignment
 
 
-	void ExecuteEvent();
+	void ExecuteEvent(Queue<Event*>* EventList);
 
 
 	

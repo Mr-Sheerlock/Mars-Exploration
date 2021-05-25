@@ -10,6 +10,8 @@ MasterStation::MasterStation()
 
 	Output.open("Output.txt");
 
+	C_Day = 1;
+
 	//Lists
 
 	EventList = new Queue<Event*>();
@@ -132,7 +134,19 @@ void MasterStation::ReadEvents()
 
 
 
-
+void MasterStation::ExecuteEvent(Queue<Event*>* EventList)
+{
+	Event* Executed_Event;
+	if (EventList->IsEmpty())
+	{
+		return;
+	}
+	while (EventList->Peek()->getEventDay() == C_Day)
+	{
+		EventList->Dequeue(Executed_Event);
+		Executed_Event->Execute(this);
+	}
+}
 
 
 void MasterStation::ExecuteDay() {

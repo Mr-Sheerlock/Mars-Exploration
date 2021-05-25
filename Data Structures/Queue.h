@@ -55,7 +55,17 @@ public:
 		return true;
 	}
 
-	
+	T Peek() {
+		if (IsEmpty())
+		{
+			return NULL;
+		}
+		else
+		{
+			return Head->getitem();
+		}
+
+	}
 	~Queue()
 	{
 		T temp;
