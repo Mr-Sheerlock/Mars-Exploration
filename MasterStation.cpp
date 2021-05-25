@@ -4,16 +4,20 @@
 MasterStation::MasterStation()
 {
 	IO_Interface = new UI();
+	
+	
 	N_Missions = 0;
 
 	Output.open("Output.txt");
+
+	C_Day = 1;
 
 	//Lists
 
 	EventList = new Queue<Event*>();
 
-	Av_P_Rovers = new PriorityQueue<P_Rover*>(); //According to speed
-	Av_E_Rovers = new PriorityQueue<E_Rover*>();
+	Available_P_Rovers = new PriorityQueue<P_Rover*>(); //According to speed
+	Available_E_Rovers = new PriorityQueue<E_Rover*>();
 
 
 }
@@ -70,7 +74,7 @@ void MasterStation::ReadRovers()
 		//add it in the queue
 		speed = IO_Interface->ReadRoverSpeeds(Input);
 		P_Rover* New_P_Rover = new P_Rover(UniqueID, speed);
-		Av_P_Rovers->Enqueue(New_P_Rover, speed);
+		Available_P_Rovers->Enqueue(New_P_Rover, speed);
 		UniqueID++;
 	}
 	for (int i = 0; i < N_Emerg; i++)
@@ -79,7 +83,7 @@ void MasterStation::ReadRovers()
 		//add it in the queue
 		speed = IO_Interface->ReadRoverSpeeds(Input);
 		E_Rover* New_E_Rover = new E_Rover(UniqueID, speed);
-		Av_E_Rovers->Enqueue(New_E_Rover, speed);
+		Available_E_Rovers->Enqueue(New_E_Rover, speed);
 		UniqueID++;
 	}
 }
@@ -127,6 +131,23 @@ void MasterStation::ReadEvents()
 
 
 ////////////////////////////////////////////Operation//////////////////////////////////////////
+
+
+
+void MasterStation::ExecuteEvent(Queue<Event*>* EventList)
+{
+	Event* Executed_Event;
+	if (EventList->IsEmpty())
+	{
+		return;
+	}
+	while (EventList->Peek()->getEventDay() == C_Day)
+	{
+		EventList->Dequeue(Executed_Event);
+		Executed_Event->Execute(this);
+	}
+}
+
 
 void MasterStation::ExecuteDay() {
 	

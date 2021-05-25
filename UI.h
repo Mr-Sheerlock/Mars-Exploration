@@ -8,12 +8,10 @@
 
 using namespace std;
 
-__declspec(selectany) //prevents the redefined problem emerging from the local variable
-
-struct UI {    //struct because delspec works with it 
+class UI {
 
 
-
+public:
 	///////////////////////////////////INPUT FUNCTIONS//////////////////////////////
 
 	void ReadRoversNumbers(ifstream& Input, int& M, int& P, int& E);
@@ -34,25 +32,25 @@ struct UI {    //struct because delspec works with it
 
 	void Read_Cancellation(ifstream& Input, int& ED, int& ID);
 
-	
+
 	//From Console
 	void ReadUserChoice(int& choice);
-	
+
 
 	//////////////////////////////////OUTPUT FUNCTIONS//////////////////////////////
-	
+
 	//1-To File:
-	
+
 	//What we print to the output file at the end of each day
 	void WriteEachDay(int CD, int ID, int FD, int WD, int ED, ofstream& Output);
-	
+
 	void WriteHeader(ofstream& Output);
-	
-	void WriteMissions(int M_Mission, int E_Mission, int P_Mission, ofstream& Output );
-	
+
+	void WriteMissions(int M_Mission, int E_Mission, int P_Mission, ofstream& Output);
+
 	void WriteRovers(int M_Rover, int E_Rover, int P_Rover, ofstream& Output);
-	
-	void WriteStats( int Avg_Wait, int Avg_Exec, int Auto_P, ofstream& Output);
+
+	void WriteStats(int Avg_Wait, int Avg_Exec, int Auto_P, ofstream& Output);
 
 
 	//2-To Console:
@@ -90,11 +88,6 @@ struct UI {    //struct because delspec works with it
 
 
 
-}U_I ;   //create a one global instant of the class as per the singleton technique
-		 //(we don't need more than that)
-
-
-
-
+};
 
 #endif 
