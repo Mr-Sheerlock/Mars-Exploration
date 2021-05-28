@@ -14,23 +14,19 @@ class UI {
 public:
 	///////////////////////////////////INPUT FUNCTIONS//////////////////////////////
 
-	void ReadRoversNumbers(ifstream& Input, int& M, int& P, int& E);
+	void ReadRoversNumbers(ifstream& Input, int& P, int& E);
 
 	int ReadRoverSpeeds(ifstream& Input); //returns the speed of each rover
 
-	void Read_N_CheckupDur(ifstream& Input, int& N, int& CM, int& CP, int& CE); //number of missions before checkup and the checkup duration of each type
+	void Read_N_CheckupDur(ifstream& Input, int& N, int& CP, int& CE); //number of missions before checkup and the checkup duration of each type
 
-	int Read_AutoP(ifstream& Input);
+	int Read_MaintDur(ifstream& Input);
 
 	int Read_EventsNum(ifstream& Input);
 
 	char ReadEventsTyp(ifstream& Input);
 
 	void Read_Formulation(ifstream& Input, char& Rover_Typ, int& ED, int& ID, int& TLOC, int& MDUR, int& SIG);
-
-	void Read_Promotion(ifstream& Input, int& ED, int& ID);
-
-	void Read_Cancellation(ifstream& Input, int& ED, int& ID);
 
 
 	//From Console

@@ -14,7 +14,7 @@ class MasterStation {
 
 	int N_Missions;
 	int N_Rovers;
-	int N_Mount, N_Polar, N_Emerg;
+	int N_Polar, N_Emerg;
 	int C_Day;
 
 
@@ -66,6 +66,7 @@ public:
 	void ReadInputFile();
 	void ReadRovers();
 	void ReadCheckupInfo();
+	void ReadMaintDur();
 	void ReadEvents();
 
 

@@ -49,6 +49,7 @@ void MasterStation::ReadInputFile()
 	{
 		ReadRovers();
 		ReadCheckupInfo();
+		ReadMaintDur();
 		ReadEvents();
 		Input.close();
 	}
@@ -63,9 +64,9 @@ void MasterStation::ReadRovers()
 	int UniqueID; //used to find a unique id for each rover
 	UniqueID = 1;
 
-	IO_Interface->ReadRoversNumbers(Input, N_Mount, N_Polar, N_Emerg); // waiting rovers of each type
+	IO_Interface->ReadRoversNumbers(Input, N_Polar, N_Emerg); // waiting rovers of each type
 
-	N_Rovers = N_Mount + N_Polar + N_Emerg; //Total number of rovers
+	N_Rovers = N_Polar + N_Emerg; //Total number of rovers
 	int speed;
 	
 	for (int i = 0; i < N_Polar; i++)
@@ -88,14 +89,24 @@ void MasterStation::ReadRovers()
 	}
 }
 
+
 void MasterStation::ReadCheckupInfo()
 {
 	int N, CM, CP, CE;
-	IO_Interface->Read_N_CheckupDur(Input, N, CM, CP, CE);
+	IO_Interface->Read_N_CheckupDur(Input, N, CP, CE);
 	Rover::setN(N);
 	P_Rover::Set_CheckupD(CP);
 	E_Rover::Set_CheckupD(CE);
 }
+
+void MasterStation::ReadMaintDur()
+{
+	int MainDur;
+	MainDur = IO_Interface->Read_MaintDur(Input);
+	Rover::setMainDur(MainDur);
+}
+
+
 
 void MasterStation::ReadEvents()
 {
