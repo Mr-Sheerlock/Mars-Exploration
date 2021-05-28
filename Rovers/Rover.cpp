@@ -34,4 +34,18 @@ void Rover::setN(int n)
 	N = n;
 }
 
+void Rover::setMainDur(int MDur)
+{
+	//if (MDur < 0) { MainDur = 10; return; }
+	MainDur = MDur;
+}
+
+int Rover::GetMainDur()
+{
+	return MainDur;
+}
+
+
+int Rover::MainDur=10;
+
 int Rover::N=10; //set an initial value

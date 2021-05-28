@@ -2,9 +2,9 @@
 using namespace std;
 
 ///////////////////////////////////////INPUT//////////////////////////////////////////
-void UI::ReadRoversNumbers(ifstream& Input, int& M, int& P, int& E)
+void UI::ReadRoversNumbers(ifstream& Input, int& P, int& E)
 {
-	Input >> M >> P >> E;
+	Input >> P >> E;
 }
 
 int UI::ReadRoverSpeeds(ifstream& Input)
@@ -14,17 +14,17 @@ int UI::ReadRoverSpeeds(ifstream& Input)
 	return speed;
 }
 
-void UI::Read_N_CheckupDur(ifstream& Input, int& N, int& CM, int& CP, int& CE)
+void UI::Read_N_CheckupDur(ifstream& Input, int& N, int& CP, int& CE)
 {
 	Input >> N;
-	Input >> CM >> CP >> CE;
+	Input >> CP >> CE;
 }
 
-int UI::Read_AutoP(ifstream& Input)
+int UI::Read_MaintDur(ifstream& Input)
 {
-	int AutoP;
-	Input >> AutoP;
-	return AutoP;
+	int MainDur;
+	Input >> MainDur;
+	return MainDur;
 }
 
 int UI::Read_EventsNum(ifstream& Input)
@@ -45,18 +45,6 @@ void UI::Read_Formulation(ifstream& Input, char& Rover_Typ, int& ED, int& ID, in
 {
 	Input >> Rover_Typ >> ED >> ID >> TLOC >> MDUR >> SIG;
 }
-
-void UI::Read_Promotion(ifstream& Input, int& ED, int& ID)
-{
-	Input >> ED >> ID;
-}
-
-void UI::Read_Cancellation(ifstream& Input, int& ED, int& ID)
-{
-	Input >> ED >> ID;
-}
-
-
 
 //From Console
 void UI::ReadUserChoice(int& choice)
