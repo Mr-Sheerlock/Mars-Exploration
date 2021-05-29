@@ -37,13 +37,13 @@ int Rover::GetID()
 	return ID;
 }
 
-void Rover::setN(int n)
+void Rover::SetMissionsB4Checkup(int n)
 {
 	if (n < 0) { MissionsB4Checkup = 10; return; }
 	MissionsB4Checkup = n;
 }
 
-void Rover::setMaintDur(int MDur)
+void  Rover::setMaintDur(int MDur)
 {
 	//if (MDur < 0) { MainDur = 10; return; }
 	MaintDur = MDur;
@@ -89,3 +89,13 @@ int Rover::GetArrive2Target() {
 	return Arrive2Target;
 }
 
+
+void Rover::SetNeedCheck(bool x) {
+
+	NeedsCheckup = x;
+}
+
+bool Rover::GetNeedCheck() {
+
+	return NeedsCheckup;
+}

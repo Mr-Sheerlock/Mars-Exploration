@@ -1,6 +1,10 @@
 #include "MasterStation.h"
 #include "Events/Event Headers.h"
 
+#include <stdlib.h>  //for rand
+#include <time.h>    // for time(0)
+#include <cmath>	 // for exp and log 
+
 MasterStation::MasterStation()
 {
 	IO_Interface = new UI();
@@ -18,6 +22,20 @@ MasterStation::MasterStation()
 
 	Available_P_Rovers = new PriorityQueue<P_Rover*>(); //According to speed
 	Available_E_Rovers = new PriorityQueue<E_Rover*>();
+
+	N_Execution_Rovers= new PriorityQueue<Rover*>;   
+
+	N_Execution_Missions= new PriorityQueue<Mission*>;
+
+	Waiting_P_Missions= new Queue<P_Mission*>;
+
+	/*PriorityQueue<Rover*>*Checkup_Rovers; 
+
+	PriorityQueue<Rover*>*Maintainance_Rovers; */
+
+
+
+	Waiting_E_Missions = new PriorityQueue<E_Mission*>;
 
 
 }
@@ -94,7 +112,7 @@ void MasterStation::ReadCheckupInfo()
 {
 	int N, CM, CP, CE;
 	IO_Interface->Read_N_CheckupDur(Input, N, CP, CE);
-	Rover::setMissionsB4Checkup(N);
+	Rover::SetMissionsB4Checkup(N);
 	P_Rover::Set_CheckupD(CP);
 	E_Rover::Set_CheckupD(CE);
 }
@@ -168,13 +186,20 @@ void MasterStation::ExecuteDay() {
 		//->Missions Assignment
 	
 	//1-Check if there are Any Events O(1)
-
-	
+	AssignMission();
+	Checkfailed();
+	CurrentDay++;
 }
 
 //temporary code for assigning the mission, doesn't contain any checks, just assigns them
-void MasterStation::AssignMission(Mission* M) {
-	N_Execution_Missions.Enqueue(M,1);
+void MasterStation::AssignMission() {
+	int i = CurrentDay;
+	P_Mission* P = new P_Mission(i, i, i, i, i);
+
+	P_Rover* R = new P_Rover(i, 5);
+	
+	P->AssignRover(R);
+	N_Execution_Missions->Enqueue(P,1);
 
 
 
@@ -184,20 +209,21 @@ void MasterStation::AssignMission(Mission* M) {
 //incomplete in this version
 void MasterStation::Checkfailed() {
 
+	if (N_Execution_Missions->isEmpty()) { return; }
+
 	PriorityQueue<Mission*>tempM; //should be sorted according to negative of completion day
 
-	PriorityQueue<Rover*> tempR;
 
 	Mission* M;
 	Rover* R;
 
 	srand(time(NULL) + N_Missions); 
-	while (N_Execution_Missions.Dequeue(M)) {
+	while (N_Execution_Missions->Dequeue(M)) {
 
 		//puts in a random seed dependent on number of missions and runtime values
 		
 		int MissionSpan =M->GetExecutionDays(); //execution days represent the span to which 
-		//we need to scale  
+		//we need to scale to  
 		
 		double MissionFailP = CalculateProbability(ProbabilityOFfailure, MissionSpan);
 		
@@ -208,6 +234,10 @@ void MasterStation::Checkfailed() {
 		//if it failed 
 		if (randomF<MissionFailP) {
 			
+			cout << "Failed Mission"<<endl; FAIL++;
+
+			cout << " Failed Missions: " << FAIL;
+
 			int FD_o = M->GetFormulationDay();
 			int MD_o = M->GetDuration();
 			//restart FormulationDay
@@ -231,6 +261,8 @@ void MasterStation::Checkfailed() {
 			
 			//first get the corresponding rover 
 			R = M->GetAssignedRover();
+			
+			R->SetNeedCheck(true); // it will need checkup upon arrival
 			
 			int NewCompletionlDay = R->GetCompletionlDay(); //assume it's unchanged
 
@@ -257,9 +289,10 @@ void MasterStation::Checkfailed() {
 			
 			//3-if it was coming back from the location: then leave the CD as is
 			
-			//until now, we haven't applied the changes to the PQ of rover, this will be done as an extra check in MissionArrive function
+			//until now, we haven't applied the changes to the PQ of rover, this will be done in a separate while loop
 
 		}
+		//DID NOT FAIL
 		else {
 
 			tempM.Enqueue(M, 1); //dummy priority
@@ -270,11 +303,19 @@ void MasterStation::Checkfailed() {
 
 
 		while (tempM.Dequeue(M)) {
-			N_Execution_Missions.Enqueue(M, -(M->GetCompletionDay()));  //negative of completing day
+			N_Execution_Missions->Enqueue(M, -(M->GetCompletionDay()));  //negative of completion day
 
 		}
 
-		// we still need a loop to update all the missions' priority
+		// we still need a loop to update all the Rovers' priority
+		PriorityQueue<Rover*> tempR;
+		while (N_Execution_Rovers->Dequeue(R)) {
+			tempR.Enqueue(R, 1);  //dummy priority
+		}
+
+		while (tempR.Dequeue(R)) {
+			N_Execution_Rovers->Enqueue(R, -R->GetCompletionlDay());
+		}
 
 	}
 

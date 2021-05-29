@@ -33,8 +33,10 @@ public:
 	virtual void SetSpeed(int s);
 	virtual int GetSpeed();
 	virtual int GetID();
+
 	void static SetMissionsB4Checkup(int n);
-	void static SetMaintDur(int MDur);
+	
+	void static setMaintDur(int MDur);
 
 	int static GetMaintDur();
 
@@ -48,9 +50,9 @@ public:
 	virtual char GetType()=0;
 
 	void SetArrive2Target(int x);
-
 	int GetArrive2Target();
 
-
+	void SetNeedCheck(bool x);
+	bool GetNeedCheck();
 
 };

@@ -11,7 +11,7 @@ class Event;
 
 
 class MasterStation {
-
+	int FAIL;
 	int CurrentDay;
 
 	int N_Missions;
@@ -48,7 +48,7 @@ class MasterStation {
 
 	PriorityQueue<E_Mission*>* Waiting_E_Missions; //Priority
 	
-	PriorityQueue<Mission*> N_Execution_Missions;  //negative of Competion day
+	PriorityQueue<Mission*>* N_Execution_Missions;  //negative of Competion day
 
 	///No need for the Completed Missions because once completed, the get outputted
 
@@ -117,7 +117,6 @@ public:
 
 
 	void AssignMission();
-	void AssignMission(Mission*);
 
 
 	
