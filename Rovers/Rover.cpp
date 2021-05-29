@@ -1,11 +1,20 @@
 #include "Rover.h"
 
+
+
 Rover::Rover(int id, int s)
 {
 	ID = id;
 	Speed = s;
 	Health = 100;      // ie .100%
+
+	MissionID = -1;
+
+	NeedsCheckup = 0;
 }
+
+int Rover::MissionsB4Checkup=10; //set an initial value
+int Rover::MaintDur=10;
 
 Rover::~Rover()
 {
@@ -30,22 +39,53 @@ int Rover::GetID()
 
 void Rover::setN(int n)
 {
-	if (n < 0) { N = 10; return; }
-	N = n;
+	if (n < 0) { MissionsB4Checkup = 10; return; }
+	MissionsB4Checkup = n;
 }
 
-void Rover::setMainDur(int MDur)
+void Rover::setMaintDur(int MDur)
 {
 	//if (MDur < 0) { MainDur = 10; return; }
-	MainDur = MDur;
+	MaintDur = MDur;
 }
 
-int Rover::GetMainDur()
+int Rover::GetMaintDur()
 {
-	return MainDur;
+	return MaintDur;
 }
 
 
-int Rover::MainDur=10;
+void Rover::SetMissionID(int ID) {
 
-int Rover::N=10; //set an initial value
+	MissionID = ID;
+}
+
+int Rover::GetMissionID() {
+
+	return MissionID;
+}
+
+void Rover::SetCompletionDay(int ArrivalD) {
+
+	CompletionDay = ArrivalD;
+}
+
+int Rover::GetCompletionlDay() {
+	return CompletionDay;
+}
+
+void Rover::SetType(char x) {
+	Type = x;
+}
+
+
+void Rover::SetArrive2Target(int x) {
+
+	Arrive2Target = x;
+}
+
+int Rover::GetArrive2Target() {
+
+	return Arrive2Target;
+}
+

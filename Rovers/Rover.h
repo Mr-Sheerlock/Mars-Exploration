@@ -5,18 +5,27 @@ class Rover
 {
 
 	int ID;
-	int Speed; // in km/hr
+	int MissionID;
 	char Type; // M, P, or E
-	
-	int static N; //number of missions before checkup
 
+	
+
+	int Speed; // in km/hr
+	int CompletionDay; 
+
+	int Arrive2Target; //Days taken to arrive to the target
+
+	bool NeedsCheckup;
+
+	
+	int static MissionsB4Checkup; //number of missions before checkup
+	
+	int static MaintDur; // Maintainance
+	
 	int Health; //used for maintainance
 
-	int static MainDur; // Maintainance
+	//How we did health
 
-	/////// Health Eqn
-
-	////////
 
 public:
 	Rover(int, int);
@@ -24,10 +33,24 @@ public:
 	virtual void SetSpeed(int s);
 	virtual int GetSpeed();
 	virtual int GetID();
-	void static setN(int n);
-	void static setMainDur(int MDur);
-	int static GetMainDur();
+	void static SetMissionsB4Checkup(int n);
+	void static SetMaintDur(int MDur);
 
-	//virtual void setType()=0;       //for later 
+	int static GetMaintDur();
+
+	void SetMissionID(int ID);
+	int  GetMissionID();
+
+	int GetCompletionlDay();
+	void SetCompletionDay(int x);
+
+	void SetType(char x);       
+	virtual char GetType()=0;
+
+	void SetArrive2Target(int x);
+
+	int GetArrive2Target();
+
+
 
 };

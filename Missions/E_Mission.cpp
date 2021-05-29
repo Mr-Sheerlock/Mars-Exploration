@@ -3,6 +3,7 @@
 
 E_Mission::E_Mission(int Id, int FD, int TLOC, int Duration, int significance, int priority) : Mission(Id, FD, TLOC, Duration, significance) {
 
+	SetTYP('E');
 	Assigned_Rover = nullptr;
 
 	SetPriority(priority);

@@ -42,18 +42,18 @@ int Mission::GetSIG() { return Significance; }
 
 
 
-void Mission::SetFD(int x) { Formulation_Day = x; }
-int Mission::GetFD() { return Formulation_Day; }
+void Mission::SetFormulationDay(int x) { Formulation_Day = x; }
+int Mission::GetFormulationDay() { return Formulation_Day; }
 
-void Mission::SetWD(int x) { Waiting_Days = x; }
-int Mission::GetWD() { return Waiting_Days; }
+void Mission::SetWaitingDays(int x) { Waiting_Days = x; }
+int Mission::GetWaitingDays() { return Waiting_Days; }
 
-void Mission::SetED(int x) { Execution_Days = x; }
-int Mission::GetED() { return Execution_Days; }
+void Mission::SetExecutionDays(int x) { Execution_Days = x; }
+int Mission::GetExecutionDays() { return Execution_Days; }
 
 
-void Mission::SetCD(int x) { Completion_Day = x; }
-int Mission::GetCD() { return Completion_Day; }
+void Mission::SetCompletionDay(int x) { Completion_Day = x; }
+int Mission::GetCompletionDay() { return Completion_Day; }
 
 
 void Mission::SetTYP(char x) { type = x; }

@@ -12,11 +12,13 @@ class Event;
 
 class MasterStation {
 
+	int CurrentDay;
+
 	int N_Missions;
 	int N_Rovers;
 	int N_Polar, N_Emerg;
-	int C_Day;
 
+	int ProbabilityOFfailure;
 
 
 	UI* IO_Interface;
@@ -51,6 +53,9 @@ class MasterStation {
 	///No need for the Completed Missions because once completed, the get outputted
 
 
+
+	//Auxillary utilities
+	double CalculateProbability(int Probability, int Duration);
 
 public:
 	MasterStation();
@@ -112,7 +117,11 @@ public:
 
 
 	void AssignMission();
+	void AssignMission(Mission*);
 
+
+	
+	
 	void CheckMissionComplete();
 	
 	//prints the mission after its completion
