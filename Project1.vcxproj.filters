@@ -43,9 +43,6 @@
     <ClCompile Include="Rovers\P_Rover.cpp">
       <Filter>Rovers</Filter>
     </ClCompile>
-    <ClCompile Include="MasterStation.cpp">
-      <Filter>MasterStation</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
@@ -92,9 +89,6 @@
     </ClInclude>
     <ClInclude Include="Events\Formulation Event.h">
       <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="MasterStation.h">
-      <Filter>MasterStation</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
       <Filter>UI</Filter>

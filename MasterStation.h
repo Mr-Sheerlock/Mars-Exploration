@@ -11,12 +11,14 @@ class Event;
 
 
 class MasterStation {
+	int FAIL;
+	int CurrentDay;
 
 	int N_Missions;
 	int N_Rovers;
 	int N_Polar, N_Emerg;
-	int C_Day;
 
+	int ProbabilityOFfailure;
 
 
 	UI* IO_Interface;
@@ -46,11 +48,14 @@ class MasterStation {
 
 	PriorityQueue<E_Mission*>* Waiting_E_Missions; //Priority
 	
-	PriorityQueue<Mission*> N_Execution_Missions;  //negative of Competion day
+	PriorityQueue<Mission*>* N_Execution_Missions;  //negative of Competion day
 
 	///No need for the Completed Missions because once completed, the get outputted
 
 
+
+	//Auxillary utilities
+	double CalculateProbability(int Probability, int Duration);
 
 public:
 	MasterStation();
@@ -113,6 +118,9 @@ public:
 
 	void AssignMission();
 
+
+	
+	
 	void CheckMissionComplete();
 	
 	//prints the mission after its completion

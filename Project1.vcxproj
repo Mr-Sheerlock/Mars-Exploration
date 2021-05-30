@@ -142,7 +142,6 @@
   <ItemGroup>
     <ClCompile Include="Events\Event.cpp" />
     <ClCompile Include="Events\Formulation Event.cpp" />
-    <ClCompile Include="MasterStation.cpp" />
     <ClCompile Include="Missions\E_Mission.cpp" />
     <ClCompile Include="Missions\Mission.cpp" />
     <ClCompile Include="Missions\P_Mission.cpp" />
@@ -161,7 +160,6 @@
     <ClInclude Include="Events\Event Headers.h" />
     <ClInclude Include="Events\Event.h" />
     <ClInclude Include="Events\Formulation Event.h" />
-    <ClInclude Include="MasterStation.h" />
     <ClInclude Include="Missions\E_Mission.h" />
     <ClInclude Include="Missions\Mission Headers.h" />
     <ClInclude Include="Missions\Mission.h" />
