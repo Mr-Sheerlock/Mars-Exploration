@@ -7,13 +7,14 @@
 
 MasterStation::MasterStation()
 {
+
+	
 	IO_Interface = new UI();
 	
 	ProbabilityOFfailure = 5; // in percent
 	N_Missions = 0;
 
 	Output.open("Output.txt");
-
 	CurrentDay = 1;
 
 	//Lists
@@ -33,10 +34,9 @@ MasterStation::MasterStation()
 
 	PriorityQueue<Rover*>*Maintainance_Rovers; */
 
-
-
 	Waiting_E_Missions = new PriorityQueue<E_Mission*>;
 
+	srand(time(NULL) + N_Missions); // ensures that each run we get a new random output regarding the failure
 
 }
 
@@ -194,8 +194,9 @@ void MasterStation::ExecuteDay() {
 //temporary code for assigning the mission, doesn't contain any checks, just assigns them
 void MasterStation::AssignMission() {
 	int i = CurrentDay;
-	P_Mission* P = new P_Mission(i, i, i, i, i);
+	P_Mission* P = new P_Mission(i, i, i, i+2, i);
 
+	P->SetExecutionDays(15);
 	P_Rover* R = new P_Rover(i, 5);
 	
 	P->AssignRover(R);
@@ -217,7 +218,6 @@ void MasterStation::Checkfailed() {
 	Mission* M;
 	Rover* R;
 
-	srand(time(NULL) + N_Missions); 
 	while (N_Execution_Missions->Dequeue(M)) {
 
 		//puts in a random seed dependent on number of missions and runtime values
@@ -227,16 +227,21 @@ void MasterStation::Checkfailed() {
 		
 		double MissionFailP = CalculateProbability(ProbabilityOFfailure, MissionSpan);
 		
+		//cout << "The randomMFAILP is " << MissionFailP << endl;
 		//Try to adjust accuracy 
 
-		double randomF = (rand() % (1000000)) / 1000.0; //generates a random float from 0 to 100
+		double randomF = ((rand() % (10000)) / 100.0); //generates a random float from 0 to 100 With Percision up to TWO decimal places
 		
+		//So we need to add extra 5 decimal places for accuracy 
+		int a = 0;
+		for (int i = 0; i < 5; i++) {
+			a = rand() % 10;
+			randomF = randomF + a * pow(0.1, 3 + i);
+		}
+
 		//if it failed 
 		if (randomF<MissionFailP) {
 			
-			cout << "Failed Mission"<<endl; FAIL++;
-
-			cout << " Failed Missions: " << FAIL;
 
 			int FD_o = M->GetFormulationDay();
 			int MD_o = M->GetDuration();
@@ -300,23 +305,19 @@ void MasterStation::Checkfailed() {
 			//no need to change the state of the rover, the mission didn't fail
 		}
 
+	}
 
+	while (tempM.Dequeue(M)) {
+		N_Execution_Missions->Enqueue(M, -(M->GetCompletionDay()));  //negative of completion day
+	}
+	// we still need a loop to update all the Rovers' priority
+	PriorityQueue<Rover*> tempR;
+	while (N_Execution_Rovers->Dequeue(R)) {
+		tempR.Enqueue(R, 1);  //dummy priority
+	}
 
-		while (tempM.Dequeue(M)) {
-			N_Execution_Missions->Enqueue(M, -(M->GetCompletionDay()));  //negative of completion day
-
-		}
-
-		// we still need a loop to update all the Rovers' priority
-		PriorityQueue<Rover*> tempR;
-		while (N_Execution_Rovers->Dequeue(R)) {
-			tempR.Enqueue(R, 1);  //dummy priority
-		}
-
-		while (tempR.Dequeue(R)) {
-			N_Execution_Rovers->Enqueue(R, -R->GetCompletionlDay());
-		}
-
+	while (tempR.Dequeue(R)) {
+		N_Execution_Rovers->Enqueue(R, -R->GetCompletionlDay());
 	}
 
 }
@@ -330,9 +331,9 @@ double MasterStation:: CalculateProbability(int DesiredFailure, int Duration) {
 
 	int DesiredSuccess = 100 - DesiredFailure;
 
-	DesiredSuccess= DesiredSuccess / 100.0;  //you need to divide in order for the exp to work properly
+	double DailySuccess = DesiredSuccess / 100.0;  //you need to divide in order for the exp to work properly
 
-	double DailySuccess = log(DesiredSuccess) / Duration;
+	DailySuccess = log(DailySuccess) / Duration;
 
 	DailySuccess = exp(DailySuccess) * 100;  // in percent
 
