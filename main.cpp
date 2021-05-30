@@ -11,13 +11,8 @@ int main() {
 	MasterStation MS;
 
 	//Read input
-	MS.ReadInputFile();
+	//MS.ReadInputFile();
 
 
-	/*for (int i = 0; i < 100; i++) {
-		MS.ExecuteDay();
-
-	}
-
-	MS.FinalOutput();*/
+	//MS.FinalOutput();
 }

@@ -2,6 +2,7 @@
 
 P_Mission::P_Mission(int Id, int FD, int TLOC, int Duration, int significance) : Mission(Id, FD, TLOC, Duration, significance)
 {
+	SetTYP('P');
 	Assigned_Rover = nullptr;
 
 }

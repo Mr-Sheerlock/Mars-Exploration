@@ -10,6 +10,9 @@ class Mission
 	int Formulation_Day;
 	int Waiting_Days;
 	int Execution_Days;
+
+	int Starting_Day;
+
 	int Completion_Day;
 
 	int TargetLocation;
@@ -22,6 +25,8 @@ class Mission
 
 	bool Status;     //0 for waiting/failed  , 1 for ongoing
 
+
+	
 
 public:
 	
@@ -39,17 +44,17 @@ public:
 	void SetSIG(int x);
 	int GetSIG();
 
-	void SetFD(int x);   //Formulation Day
-	int GetFD();
+	void SetFormulationDay(int x);  
+	int GetFormulationDay();
 
-	void SetWD(int x);    // Waiting Days
-	int GetWD();
+	void SetWaitingDays(int x);   
+	int GetWaitingDays();
 
-	void SetED(int x);   //  
-	int GetED();
+	void SetExecutionDays(int x);    
+	int GetExecutionDays();
 
-	void SetCD(int x);
-	int GetCD();
+	void SetCompletionDay(int x);   
+	int GetCompletionDay();
 
 	void SetTYP(char x);
 	char GetTYP();
