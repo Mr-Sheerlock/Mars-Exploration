@@ -9,6 +9,8 @@ public:
 	void static Set_CheckupD(int CheckD);
 	static int GetCheckupD();
 
+	char GetType();
+
 private:
 	int static CE; //checkup duration in days
 };
