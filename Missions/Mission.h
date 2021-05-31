@@ -55,6 +55,9 @@ public:
 
 	void SetCompletionDay(int x);   
 	int GetCompletionDay();
+	
+	void SetStartingDay(int x);   
+	int GetStartingDay();
 
 	void SetTYP(char x);
 	char GetTYP();

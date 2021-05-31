@@ -11,7 +11,11 @@ E_Mission::E_Mission(int Id, int FD, int TLOC, int Duration, int significance, i
 
 void E_Mission::SetPriority(int P) {
 	MissionPriority = P;
-	// P =  0.3 *TLOC + 0.2 *MD + 0.5*SIG - 0.1 * FD   
+
+	// P =  1 *TLOC + 5 *MD + 100*SIG - 1 * FD   
+	
+	
+	
 	
 	//or (FD% AvgFD)
 

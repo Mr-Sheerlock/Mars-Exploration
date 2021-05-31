@@ -55,6 +55,9 @@
     <ClCompile Include="Events\Formulation Event.cpp">
       <Filter>Events</Filter>
     </ClCompile>
+    <ClCompile Include="MasterStation.cpp">
+      <Filter>MasterStation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Events\Event.h">
@@ -107,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="Rovers\Rovers Headers.h">
       <Filter>Rovers</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterStation.h">
+      <Filter>MasterStation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

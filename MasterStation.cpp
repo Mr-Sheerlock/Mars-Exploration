@@ -37,9 +37,8 @@ MasterStation::MasterStation()
 	Waiting_E_Missions = new PriorityQueue<E_Mission*>;
 
 	srand(time(NULL) + N_Missions); // ensures that each run we get a new random output regarding the failure
-
+	
 }
-
 
 
 
@@ -152,14 +151,14 @@ void MasterStation::ReadEvents()
 }
 
 
-/////////////////////////////////////////OUTPUT////////////////////////////////////////////////
+//////////////////////////////////////OUTPUT////////////////////////////////////////////////
 
 
 
 
 
 
-////////////////////////////////////////////Operation//////////////////////////////////////////
+//////////////////////////////////////Operation//////////////////////////////////////////
 
 
 
@@ -227,9 +226,6 @@ void MasterStation::Checkfailed() {
 		
 		double MissionFailP = CalculateProbability(ProbabilityOFfailure, MissionSpan);
 		
-		//cout << "The randomMFAILP is " << MissionFailP << endl;
-		//Try to adjust accuracy 
-
 		double randomF = ((rand() % (10000)) / 100.0); //generates a random float from 0 to 100 With Percision up to TWO decimal places
 		
 		//So we need to add extra 5 decimal places for accuracy 
@@ -243,12 +239,15 @@ void MasterStation::Checkfailed() {
 		if (randomF<MissionFailP) {
 			
 
-			int FD_o = M->GetFormulationDay();
+			int SD_o = M->GetStartingDay();
+
 			int MD_o = M->GetDuration();
 			//restart FormulationDay
 			M->SetFormulationDay(CurrentDay);
 			//restart Waiting Days 
 			M->SetWaitingDays(0);
+
+			
 
 			//classify
 			P_Mission* P = dynamic_cast<P_Mission*>(M);
@@ -259,6 +258,10 @@ void MasterStation::Checkfailed() {
 				Waiting_P_Missions->Enqueue(P);
 			}
 			else{
+				//reset the priority
+				// Don't forget to ADD the actual Equation
+				int Priority = 10;  
+				E->SetPriority(Priority);
 				Waiting_E_Missions->Enqueue(E,E->GetPriority());
 			}
 			
@@ -273,16 +276,16 @@ void MasterStation::Checkfailed() {
 
 			int Arrive2Target= R->GetArrive2Target();
 			//1-if it was still going to the location
-			if (CurrentDay < FD_o + Arrive2Target) {
+			if (CurrentDay < SD_o + Arrive2Target) {
 
-				//CompDay= CurrentDay + (CurrentDay-FD)
+				//CompDay= CurrentDay + (CurrentDay-StartingDay)
 
-				NewCompletionlDay = 2*CurrentDay - FD_o ;
+				NewCompletionlDay = 2*CurrentDay - SD_o ;
 
 				R->SetCompletionDay(NewCompletionlDay);
 			} 
 			//2-if it was on the location
-			else if (CurrentDay > FD_o + Arrive2Target && CurrentDay < FD_o + Arrive2Target + MD_o) {
+			else if (CurrentDay > SD_o + Arrive2Target && CurrentDay < SD_o + Arrive2Target + MD_o) {
 
 				//Compday= Current+ Arrive2Target
 

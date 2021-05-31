@@ -56,6 +56,10 @@ void Mission::SetCompletionDay(int x) { Completion_Day = x; }
 int Mission::GetCompletionDay() { return Completion_Day; }
 
 
+void Mission::SetStartingDay(int x) { Starting_Day = x; }
+int Mission::GetStartingDay() { return Starting_Day; }
+
+
 void Mission::SetTYP(char x) { type = x; }
 char Mission::GetTYP() { return type; }
 
