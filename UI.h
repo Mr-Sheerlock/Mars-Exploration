@@ -54,30 +54,26 @@ public:
 	//prints the given parameter according to the format specified for emergency
 	void PrintEmergency(int* E, int count);
 
-	//prints the given parameter according to the format specified for mountainous
-	void PrintMount(int* M, int count);
-
 	//prints the given parameter according to the format specified for polar
 	void PrintPolar(int* P, int count);
 
 	//prints the given parameter according to the format specified for Missions/Rovers
 	void PrintMissionsAndRovers(int* M, int* R, int count, char type);
 
-
 	void PrintBreakLine();
 
-	void PrintInExecution(int* M, int* R, int count, int cE, int cM, int cP, char* type);
+	void PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type);
 
-	void PrintInCheckup(int* R, int count, int cE, int cM, int cP, char* type);
+	void PrintInCheckup(int* R, int count, int cE, int cP, char* type);
 
-	//where int*counts is an array of all counts needed in his part
-	void PrintOutput(int CD, int* WE, int* WM, int* WP, int* InM, int* InR, char* Intype, int* AvE, int* AvM, int* AvP, int* InCR, char* InCtype, int* CE, int* CM, int* CP, int* counts);
+	void PrintStatements(int choice, int x);
 
-	void InteractiveMode(int CD, int* WE, int* WM, int* WP, int* InM, int* InR, char* Intype, int* AvE, int* AvM, int* AvP, int* InCR, char* InCtype, int* CE, int* CM, int* CP, int* counts);
+	void InteractiveMode();
 
-	void StepByStepMode(int CD, int* WE, int* WM, int* WP, int* InM, int* InR, char* Intype, int* AvE, int* AvM, int* AvP, int* InCR, char* InCtype, int* CE, int* CM, int* CP, int* counts);
+	void StepByStepMode();
 
 	void SilentMode();
+
 
 
 

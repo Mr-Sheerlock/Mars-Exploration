@@ -99,3 +99,13 @@ bool Rover::GetNeedCheck() {
 
 	return NeedsCheckup;
 }
+
+void Rover::SetCheckUpCompletionDay(int x)
+{
+	CheckUpCompletionDay = x;
+}
+
+int Rover::GetCheckUpCompletionDay()
+{
+	return CheckUpCompletionDay;
+}

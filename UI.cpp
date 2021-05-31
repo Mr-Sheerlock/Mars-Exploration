@@ -114,24 +114,6 @@ void UI::PrintEmergency(int* E, int count)
 	}
 }
 
-void UI::PrintMount(int* M, int count)
-{
-	if (count == 0)
-		return;
-	cout << " " << "{";
-	for (int i = 0; i < count; i++)
-	{
-		if (i == count - 1)
-		{
-			cout << M[i] << "}";
-		}
-		else
-		{
-			cout << M[i] << ",";
-		}
-	}
-}
-
 void UI::PrintPolar(int* P, int count)
 {
 	if (count == 0)
@@ -159,8 +141,6 @@ void UI::PrintMissionsAndRovers(int* M, int* R, int count, char type)
 	cout << " ";
 	if (type == 'E')
 		cout << "[";
-	else if (type == 'M')
-		cout << "{";
 	else cout << "(";
 	for (int i = 0; i < count; i++)
 	{
@@ -169,8 +149,6 @@ void UI::PrintMissionsAndRovers(int* M, int* R, int count, char type)
 			cout << M[i] << "/" << R[i];
 			if (type == 'E')
 				cout << "]";
-			else if (type == 'M')
-				cout << "}";
 			else cout << ")";
 		}
 		else
@@ -198,11 +176,10 @@ void UI::PrintBreakLine()
 //then we have to classify them first before doing the operation
 //Assume that M[] , R[] are arrays that are filled blindly all ID's irrespective of the types
 
-void UI::PrintInExecution(int* M, int* R, int count, int cE, int cM, int cP, char* type)
-{	
+void UI::PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type)
+{
 
 	int* EM = new int[cE]; int* ER = new int[cE]; int c1 = 0;
-	int* MM = new int[cM]; int* MR = new int[cM]; int c2 = 0;
 	int* PM = new int[cP]; int* PR = new int[cP]; int c3 = 0;
 	for (int i = 0; i < count; i++)
 	{
@@ -212,12 +189,6 @@ void UI::PrintInExecution(int* M, int* R, int count, int cE, int cM, int cP, cha
 			ER[c1] = R[i];
 			c1++;
 		}
-		else if (type[i] == 'M')
-		{
-			MM[c2] = M[i];
-			MR[c2] = R[i];
-			c2++;
-		}
 		else
 		{
 			PM[c3] = M[i];
@@ -226,7 +197,6 @@ void UI::PrintInExecution(int* M, int* R, int count, int cE, int cM, int cP, cha
 		}
 	}
 	PrintMissionsAndRovers(EM, ER, cE, 'E');
-	PrintMissionsAndRovers(MM, MR, cM, 'M');
 	PrintMissionsAndRovers(PM, PR, cP, 'P');
 }
 
@@ -236,10 +206,9 @@ void UI::PrintInExecution(int* M, int* R, int count, int cE, int cM, int cP, cha
 //then we have to classify the rovers first before doing the operation
 //Assume that R[] is an array that is filled blindly with all ID's irrespective of the types. 
 
-void UI::PrintInCheckup(int* R, int count, int cE, int cM, int cP, char* type)
+void UI::PrintInCheckup(int* R, int count, int cE, int cP, char* type)
 {
 	int* ER = new int[cE]; int c1 = 0;
-	int* MR = new int[cM]; int c2 = 0;
 	int* PR = new int[cP]; int c3 = 0;
 	for (int i = 0; i < count; i++)
 	{
@@ -248,11 +217,6 @@ void UI::PrintInCheckup(int* R, int count, int cE, int cM, int cP, char* type)
 			ER[c1] = R[i];
 			c1++;
 		}
-		else if (type[i] == 'M')
-		{
-			MR[c2] = R[i];
-			c2++;
-		}
 		else
 		{
 			PR[c3] = R[i];
@@ -260,48 +224,51 @@ void UI::PrintInCheckup(int* R, int count, int cE, int cM, int cP, char* type)
 		}
 	}
 	PrintEmergency(ER, cE);
-	PrintMount(MR, cM);
 	PrintPolar(PR, cP);
 }
 
-
-
-void UI::PrintOutput(int CD, int* WE, int* WM, int* WP, int* InM, int* InR, char* Intype, int* AvE, int* AvM, int* AvP, int* InCR, char* InCtype, int* CE, int* CM, int* CP, int* counts)
+//Since making a function to print each day in the UI would require nearly 15 input
+//to make the function in the master station we had to handle the statements printed to illustrate the output
+//choice determines which statements should be printed
+//x is the number printed in the statement(Current day, number of waiting missions, etc)
+void UI::PrintStatements(int choice, int x)
 {
-	cout << "Current Day:" << CD << endl;
-	cout << counts[0] << " " << "Waiting Missions:";
-	PrintEmergency(WE, counts[1]);
-	PrintMount(WM, counts[2]);
-	PrintPolar(WP, counts[3]);
-	PrintBreakLine();
-	cout << counts[4] << " " << "In-Execution Missions/Rovers:";
-	cout << " ";
-	PrintInExecution(InM, InR, counts[5], counts[6], counts[7], counts[8], Intype);
-	PrintBreakLine();
-	cout << counts[9] << " " << "Available Rovers:";
-	PrintEmergency(AvE, counts[10]);
-	PrintMount(AvM, counts[11]);
-	PrintPolar(AvP, counts[12]);
-	PrintBreakLine();
-	cout << counts[13] << " " << "In-Checkup Rovers:";
-	cout << " ";
-	PrintInCheckup(InCR, counts[14], counts[15], counts[16], counts[17], InCtype);
-	PrintBreakLine();
-	cout << counts[18] << " " << "Completed Missions:";
-	PrintEmergency(CE, counts[19]);
-	PrintMount(CM, counts[20]);
-	PrintPolar(CP, counts[21]);
+	switch (choice)
+	{
+	case 1:
+		cout << "Current Day:" << x << endl;
+		break;
+	case 2:
+		cout << x << " " << "Waiting Missions:";
+		break;
+	case 3:
+		PrintBreakLine();
+		cout << x << " " << "In-Execution Missions/Rovers:";
+		cout << " ";
+		break;
+	case 4:
+		PrintBreakLine();
+		cout << x << " " << "Available Rovers:";
+		break;
+	case 5:
+		PrintBreakLine();
+		cout << x << " " << "In-Checkup Rovers:";
+		cout << " ";
+		break;
+	case 6:
+		PrintBreakLine();
+		cout << x << " " << "Completed Missions:";
+		break;
+	}
 }
 
-void UI::InteractiveMode(int CD, int* WE, int* WM, int* WP, int* InM, int* InR, char* Intype, int* AvE, int* AvM, int* AvP, int* InCR, char* InCtype, int* CE, int* CM, int* CP, int* counts)
+void UI::InteractiveMode()
 {
-	PrintOutput(CD, WE, WM, WP, InM, InR, Intype, AvE, AvM, AvP, InCR, InCtype, CE, CM, CP, counts);
 	system("pause");
 }
 
-void UI::StepByStepMode(int CD, int* WE, int* WM, int* WP, int* InM, int* InR, char* Intype, int* AvE, int* AvM, int* AvP, int* InCR, char* InCtype, int* CE, int* CM, int* CP, int* counts)
+void UI::StepByStepMode()
 {
-	PrintOutput(CD, WE, WM, WP, InM, InR, Intype, AvE, AvM, AvP, InCR, InCtype, CE, CM, CP, counts);
 	Sleep(1000);
 }
 

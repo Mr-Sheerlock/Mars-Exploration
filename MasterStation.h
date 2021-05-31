@@ -77,9 +77,16 @@ public:
 
 
 	/////////Output///////
-	void PrintEachDay();  
-		
-	void FinalOutput();
+	void PrintEachDay();
+	int TakeIdsFromWaitingE(Queue<int>& Ids);
+	int TakeIdsFromWaitingP(Queue<int>& ids);
+	int TakeInfoFromInExecution(Queue<int>& C, Queue<int>& M, Queue<int>& R, Queue<char>& RM, Queue<char>& Ctype, int& comp, int& Ecomp, int& E);
+	int TakeIdsFromAvailableE(Queue<int>& id);
+	int TakeIdsFromAvailableP(Queue<int>& id);
+	int TakeInfoFromInCheckup(Queue<int>& id, Queue<char>& type, int& Ecount);
+	template<typename T>
+	void PutIdsInArray(Queue<T>& tempId, T*& ids, int size);
+	void FinalOutput();	
 
 
 	/////////////Operation/////////////

@@ -152,7 +152,239 @@ void MasterStation::ReadEvents()
 
 
 //////////////////////////////////////OUTPUT////////////////////////////////////////////////
+void MasterStation::PrintEachDay()
+{
+	Queue<int> id;
+	int WaitingEmergency = 0; int* WaitingEIds = NULL;
+	if (!(Waiting_E_Missions->isEmpty()))//in case of empty list(no waiting emergency missions)
+	{
+		WaitingEmergency = TakeIdsFromWaitingE(id);
+		WaitingEIds = new int[WaitingEmergency];
+		PutIdsInArray(id, WaitingEIds, WaitingEmergency);
+	}
+	int WaitingPolar = 0; int* WaitingPIds = NULL;
+	if (!(Waiting_P_Missions->IsEmpty()))
+	{
+		WaitingPolar = TakeIdsFromWaitingP(id);
+		WaitingPIds = new int[WaitingPolar];
+		PutIdsInArray(id, WaitingPIds, WaitingPolar);
+	}
+	int Ecount = 0, Compcount = 0, ECompcount = 0, InExecution = 0;
+	int* InExecution_M_Ids = NULL, * InExecution_R_Ids = NULL, * Completed_Ids = NULL;
+	char* type = NULL, * CompType = NULL;
+	if (!(N_Execution_Missions->isEmpty()))
+	{
+		Queue<int> MIds, RIds, CompIds;
+		Queue<char> M_Rtype, comptype;
+		InExecution = TakeInfoFromInExecution(CompIds, MIds, RIds, M_Rtype, comptype, Compcount, ECompcount, Ecount);
+		InExecution_M_Ids = new int[InExecution];
+		InExecution_R_Ids = new int[InExecution];
+		type = new char[InExecution];
+		Completed_Ids = new int[Compcount];
+		CompType = new char[Compcount];
+		PutIdsInArray(MIds, InExecution_M_Ids, InExecution);
+		PutIdsInArray(RIds, InExecution_R_Ids, InExecution);
+		PutIdsInArray(M_Rtype, type, InExecution);
+		PutIdsInArray(CompIds, Completed_Ids, Compcount);
+		PutIdsInArray(comptype, CompType, Compcount);
+	}
+	int AvEmergency = 0; int* AvEmergency_Ids = NULL;
+	if (Available_E_Rovers->isEmpty())
+	{
+		AvEmergency = TakeIdsFromAvailableE(id);
+		AvEmergency_Ids = new int[AvEmergency];
+		PutIdsInArray(id, AvEmergency_Ids, AvEmergency);
+	}
+	int AvPolar = 0; int* AvPolar_Ids = NULL;
+	if (!(Available_P_Rovers->isEmpty()))
+	{
+		AvPolar = TakeIdsFromAvailableP(id);
+		AvPolar_Ids = new int[AvPolar];
+		PutIdsInArray(id, AvPolar_Ids, AvPolar);
+	}
+	int InCheckup = 0, EInCheckup = 0; int* InCheckupIds = NULL; char* InCheckuptype = NULL;
+	if (!(Checkup_Rovers->isEmpty()))
+	{
+		Queue<char>type;
+		InCheckup = TakeInfoFromInCheckup(id, type, EInCheckup);
+		InCheckupIds = new int[InCheckup];
+		InCheckuptype = new char[InCheckup];
+		PutIdsInArray(id, InCheckupIds, InCheckup);
+		PutIdsInArray(type, InCheckuptype, InCheckup);
+	}
+	IO_Interface->PrintStatements(1, CurrentDay);
+	IO_Interface->PrintStatements(2, WaitingEmergency + WaitingPolar);
+	IO_Interface->PrintEmergency(WaitingEIds, WaitingEmergency);
+	IO_Interface->PrintPolar(WaitingPIds, WaitingPolar);
+	IO_Interface->PrintStatements(3, InExecution);
+	IO_Interface->PrintInExecution(InExecution_M_Ids, InExecution_R_Ids, InExecution, Ecount, InExecution - Ecount, type);
+	IO_Interface->PrintStatements(4, AvEmergency + AvPolar);
+	IO_Interface->PrintEmergency(AvEmergency_Ids, AvEmergency);
+	IO_Interface->PrintPolar(AvPolar_Ids, AvPolar);
+	IO_Interface->PrintStatements(5, InCheckup);
+	IO_Interface->PrintInCheckup(InCheckupIds, InCheckup, EInCheckup, InCheckup - EInCheckup, InCheckuptype);
+	IO_Interface->PrintStatements(6, Compcount);
+	IO_Interface->PrintInCheckup(Completed_Ids, Compcount, ECompcount, Compcount - ECompcount, CompType);//note to self ba3d masla7 el error a8iar esmha f el UI
+}
 
+int MasterStation::TakeIdsFromWaitingE(Queue<int>& Ids)
+{
+	Queue<E_Mission*>temp;//missions are stored temporarily in queue instead
+	E_Mission* item;      //of priority queue to reduce complexity
+	Queue<int> id;
+	int size = 0;
+	while (Waiting_E_Missions->Dequeue(item))
+	{
+		id.Enqueue(item->GetID());
+		temp.Enqueue(item);
+		size++;
+	}
+	while (temp.Dequeue(item))
+	{
+		Waiting_E_Missions->Enqueue(item, item->GetPriority());
+	}
+	return size;
+}
+
+int MasterStation::TakeIdsFromWaitingP(Queue<int>& ids)
+{
+	int size = 1;
+	P_Mission* ptemp1, * ptemp2;
+	Waiting_P_Missions->Dequeue(ptemp1);
+	ids.Enqueue(ptemp1->GetID());
+	Waiting_P_Missions->Peek(ptemp2);
+	while (ptemp2 != ptemp1)
+	{
+		Waiting_P_Missions->Dequeue(ptemp2);
+		ids.Enqueue(ptemp2->GetID());
+		size++;
+		Waiting_P_Missions->Enqueue(ptemp2);
+		Waiting_P_Missions->Peek(ptemp2);
+	}
+	return size;
+}
+
+int MasterStation::TakeInfoFromInExecution(Queue<int>& C, Queue<int>& M, Queue<int>& R, Queue<char>& RM, Queue<char>& Ctype, int& comp, int& Ecomp, int& E)
+{
+	int InExecution = 0;
+	Queue<Mission*> t;
+	Mission* tempmission; Rover* temprover;
+	while (N_Execution_Missions->Dequeue(tempmission))
+	{
+		if (tempmission->GetCompletionDay() == CurrentDay)
+		{
+			C.Enqueue(tempmission->GetID());
+			Ctype.Enqueue(tempmission->GetTYP());
+			comp++;
+			if (tempmission->GetTYP() == 'E')
+				Ecomp++;
+		}
+		else
+		{
+			M.Enqueue(tempmission->GetID());
+			temprover = tempmission->GetAssignedRover();
+			R.Enqueue(temprover->GetID());
+			RM.Enqueue(tempmission->GetTYP());
+			InExecution++;
+			if (tempmission->GetTYP() == 'E')
+				E++;
+		}
+		t.Enqueue(tempmission);
+	}
+	while (t.Dequeue(tempmission))
+	{
+		N_Execution_Missions->Enqueue(tempmission, (tempmission->GetCompletionDay() * -1));
+	}
+	return InExecution;
+}
+
+int MasterStation::TakeIdsFromAvailableE(Queue<int>& id)
+{
+	int size = 0;
+	Queue<E_Rover*>E;
+	E_Rover* etemp;
+	while (Available_E_Rovers->Dequeue(etemp))
+	{
+		id.Enqueue(etemp->GetID());
+		E.Enqueue(etemp);
+		size++;
+	}
+	while (E.Dequeue(etemp))
+	{
+		Available_E_Rovers->Enqueue(etemp, etemp->GetSpeed());
+	}
+	return size;
+}
+
+int MasterStation::TakeIdsFromAvailableP(Queue<int>& id)
+{
+	int size = 0;
+	Queue<P_Rover*>Q;
+	P_Rover* ptemp;
+	while (Available_P_Rovers->Dequeue(ptemp))
+	{
+		id.Enqueue(ptemp->GetID());
+		Q.Enqueue(ptemp);
+		size++;
+	}
+	while (Q.Dequeue(ptemp))
+	{
+		Available_P_Rovers->Enqueue(ptemp, ptemp->GetSpeed());
+	}
+	return size;
+}
+
+int MasterStation::TakeInfoFromInCheckup(Queue<int>& id, Queue<char>& type, int& Ecount)
+{
+	int size = 0;
+	Queue<Rover*>temp;
+	Rover* rtemp;
+	while (Checkup_Rovers->Dequeue(rtemp))
+	{
+		id.Enqueue(rtemp->GetID());
+		temp.Enqueue(rtemp);
+		size++;
+		char x = rtemp->GetType();
+		type.Dequeue(x);
+		if (x == 'E')
+			Ecount++;
+	}
+	while (temp.Dequeue(rtemp))
+	{
+		Checkup_Rovers->Enqueue(rtemp, (rtemp->GetCheckUpCompletionDay() * -1));
+	}
+	return size;
+}
+
+template<typename T>
+void MasterStation::PutIdsInArray(Queue<T>& tempId, T*& ids, int size)
+{
+	T temp;
+	for (int i = 0; i < size; i++)
+	{
+		tempId.Dequeue(temp);
+		ids[i] = temp;
+	}
+}
+
+void MasterStation::FinalOutput()
+{
+	CurrentDay = 1;
+	int userChoice;
+	IO_Interface->ReadUserChoice(userChoice);
+	if (userChoice == 1 || userChoice == 2)
+	{
+		while (!(EventList->IsEmpty()) && !(N_Execution_Missions->isEmpty()))
+		{
+			PrintEachDay();
+			if (userChoice == 1)
+				IO_Interface->InteractiveMode();
+			else IO_Interface->StepByStepMode();
+			CurrentDay++;
+		}
+	}
+	else IO_Interface->SilentMode();
+}
 
 
 
@@ -169,7 +401,8 @@ void MasterStation::ExecuteEvent(Queue<Event*>* EventList)
 	{
 		return;
 	}
-	while (EventList->Peek()->getEventDay() == CurrentDay)
+	Event* Ev;
+	while (EventList->Peek(Ev)->getEventDay() == CurrentDay)
 	{
 		EventList->Dequeue(Executed_Event);
 		Executed_Event->Execute(this);

@@ -55,7 +55,7 @@ public:
 		return true;
 	}
 
-	T Peek() {
+	T Peek(T& item) {
 		if (IsEmpty())
 		{
 			return NULL;

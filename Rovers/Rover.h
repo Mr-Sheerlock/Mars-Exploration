@@ -17,6 +17,7 @@ class Rover
 
 	bool NeedsCheckup;
 
+	int CheckUpCompletionDay;
 	
 	int static MissionsB4Checkup; //number of missions before checkup
 	
@@ -54,5 +55,9 @@ public:
 
 	void SetNeedCheck(bool x);
 	bool GetNeedCheck();
+
+
+	void SetCheckUpCompletionDay(int x);
+	int GetCheckUpCompletionDay();
 
 };
