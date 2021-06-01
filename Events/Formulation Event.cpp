@@ -10,20 +10,20 @@ Formulation_Event::Formulation_Event(int ed, int id, char typ, int tloc, int mdu
 	Significance = sig;
 }
 
-//Code Produces no error but needs Testing 
 
 bool Formulation_Event::Execute(MasterStation* MS) {
 
 	if (type == 'P') {
 		P_Mission* newMission = new P_Mission(getID(), getEventDay(), Target_Location, Mission_Duration, Significance);
 		MS->ReturnWaitingPolar()->Enqueue(newMission);
-
+		MS->IncrementWTP();
 	}
 	else
 		if (type == 'E') {
 			int tempPriority = 2; //temporarily 
 			E_Mission* newMission = new E_Mission(getID(), getEventDay(), Target_Location, Mission_Duration, Significance, tempPriority);
 			MS->ReturnWaitingEmerg()->Enqueue(newMission, tempPriority);
+			MS->IncrementWTE();
 
 		}
 	return true;

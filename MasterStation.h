@@ -11,16 +11,33 @@ class Event;
 
 
 class MasterStation {
-	int FAIL;
+	
 	int CurrentDay;
 
+
+	//Stats
 	int N_Missions;
 	int N_Rovers;
-	int N_Polar, N_Emerg;
+	int NRoversP, NRoversE;
+	int NMissionsP, NMissionsE;
 
+	int WaitingMissionsP, WaitingMissionsE;
+
+	int AvRoversE, AvRoversP;
+
+	int CheckupRovers, CheckupRoversP;
+	
+	int MaintRovers, MaintRoversP;
+
+
+	int NExecMiss;
+	int NExecRovs;
+
+	//Failure
 	int ProbabilityOFfailure;
 
 
+	//Others
 	UI* IO_Interface;
 
 
@@ -50,7 +67,7 @@ class MasterStation {
 	
 	PriorityQueue<Mission*>* N_Execution_Missions;  //negative of Competion day
 
-	///No need for the Completed Missions because once completed, the get outputted
+	///No need for the Completed Missions because once completed, the gets printed
 
 
 
@@ -60,10 +77,13 @@ class MasterStation {
 public:
 	MasterStation();
 	
-	//Data member getters
+
+	//Events
+	//Data member getters /incrementers
 	PriorityQueue<E_Mission*>* ReturnWaitingEmerg();
 	Queue<P_Mission*>* ReturnWaitingPolar();
-
+	void IncrementWTP();
+	void IncrementWTE();
 
 
 
@@ -89,7 +109,11 @@ public:
 	void FinalOutput();	
 
 
-	/////////////Operation/////////////
+	void PrintMission();
+
+	/////////////Operations/////////////
+	
+	void ExecuteEvent(Queue<Event*>* EventList);
 
 	void ExecuteDay(); 
 
@@ -99,18 +123,6 @@ public:
 		//->Missions Assignment
 
 
-	void ExecuteEvent(Queue<Event*>* EventList);
-
-
-	
-	void Checkfailed(); //loops on the in-execution missions and applies the probability and sees if the misson(s) has failed 
-
-	//Idea: calculate the probability: 
-
-	// after looping n times: the accumulative probability p 
-	//                       p = (5%)^n
-
-	// so instead we might use   5% = (x)^n   and calculate x in someway or another
 
 
 
@@ -144,7 +156,17 @@ public:
 	void CheckMissionComplete();
 	
 	//prints the mission after its completion
-	void PrintMission();
+	//Failure
+	
+	void Checkfailed(); //loops on the in-execution missions and applies the probability and sees if the misson(s) has failed 
+
+	//Idea: calculate the probability: 
+
+	// after looping n times: the accumulative probability p 
+	//                       p = (5%)^n
+
+	// so instead we might use   5% = (x)^n   and calculate x in someway or another
+
 
 
 	void CalculateStats();
