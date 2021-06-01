@@ -174,7 +174,7 @@ void UI::PrintBreakLine()
 //Since the InExecution Missions and Rovers are each in 2 PQ's 
 //where each PQ contain All the types (M,P,E)
 //then we have to classify them first before doing the operation
-//Assume that M[] , R[] are arrays that are filled blindly all ID's irrespective of the types
+//Assume that M[] , R[] are arrays that are filled blindly with all ID's irrespective of the types
 
 void UI::PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type)
 {

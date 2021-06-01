@@ -155,6 +155,7 @@ void MasterStation::ReadEvents()
 void MasterStation::PrintEachDay()
 {
 	Queue<int> id;
+
 	int WaitingEmergency = 0; int* WaitingEIds = NULL;
 	if (!(Waiting_E_Missions->isEmpty()))//in case of empty list(no waiting emergency missions)
 	{
@@ -439,6 +440,203 @@ void MasterStation::AssignMission() {
 }
 
 
+void MasterStation::CheckRoverArrived()
+{
+	Rover* TempRover;
+	CheckupComplete();
+	while (N_Execution_Rovers->Peek(TempRover))
+	{
+		if (TempRover->GetCompletionlDay() == CurrentDay)
+		{
+			N_Execution_Rovers->Dequeue(TempRover);
+			Mission* AssignedMission = TempRover->GetAssignedMission();
+			if (AssignedMission == nullptr) //In case of failure
+			{
+				MoveFromInExecutionToCheckup(TempRover);
+			}
+			else
+			{
+				UpdateRover(TempRover, AssignedMission);
+				DoesItNeedCheckUp(TempRover);
+				bool Maintenance = false;
+				bool Checkup = false;
+				Maintenance = CheckMaint(TempRover);
+				if (TempRover->GetNeedCheck() == 1)
+				{
+					Checkup = true;
+				}
+				else
+				{
+					Checkup = false;
+				}
+
+				if (Checkup && Maintenance)
+				{
+					//Needs both maintenance and checkup
+					//Reset Checkup values
+					TempRover->SetMissionsDone(0);
+					MoveFromInExecutionToMaintenance(TempRover);
+				}
+				else if (!Checkup && !Maintenance)
+				{
+					//Doesn't need Maintenance or checkup
+					MoveFromInExecutionToAvailable(TempRover);
+				}
+				else if (Checkup)
+				{
+					//Checkup only
+					MoveFromInExecutionToCheckup(TempRover);
+				}
+				else if (Maintenance)
+				{
+					//Maintenance only
+					MoveFromInExecutionToMaintenance(TempRover);
+				}
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+}
+
+
+
+void MasterStation::UpdateRover(Rover* rover, Mission* mission)
+{
+	//For checkup:
+	rover->SetMissionsDone(rover->GetMissionsDone() + 1);
+	//For maintenance:
+	rover->UpdateTotalMDur(mission->GetDuration());
+	rover->UpdateTotalDist(mission->GetTLOC());
+	if (mission->GetSIG() > 7) //check if a mission has a high signifance value
+	{
+		rover->IncrementHighSigMissNum();
+	}
+	rover->UpdateHealth();
+}
+
+bool MasterStation::CheckMaint(Rover* rover)
+{
+	if (rover->GetHealth() <= 0)
+	{
+		return true;
+		rover->ResetMaintValues();
+	}
+	return false;
+}
+
+void MasterStation::Maint_Complete()
+{
+	if (!Maintainance_Rovers->isEmpty())
+	{
+		Rover* Temp;
+		Maintainance_Rovers->Peek(Temp);
+		while (Temp->GetMaintCompletionDay() == CurrentDay)
+		{
+			Maintainance_Rovers->Dequeue(Temp);
+			if (Temp->GetType() == 'P')
+			{
+				Available_P_Rovers->Enqueue((P_Rover*)Temp, Temp->GetSpeed());
+			}
+			else if (Temp->GetType() == 'E')
+			{
+				Available_E_Rovers->Enqueue((E_Rover*)Temp, Temp->GetSpeed());
+			}
+			if (Maintainance_Rovers->isEmpty())
+			{
+				return;
+			}
+			Maintainance_Rovers->Peek(Temp);
+		}
+	}
+}
+
+void MasterStation::CheckupComplete()
+{
+	Rover* R;
+	while (Checkup_Rovers->Peek(R))
+	{
+		if (R->GetCheckUpCompletionDay() == CurrentDay)
+		{
+			Checkup_Rovers->Dequeue(R);
+			MoveFromCheckupToAvailable(R);
+
+		}
+		else
+		{
+			return;
+		}
+
+	}
+}
+
+void MasterStation::DoesItNeedCheckUp(Rover* R)
+{
+	if (R->GetMissionsDone() == R->GetMissionsB4Checkup())
+	{
+		R->SetNeedCheck(1);
+	}
+}
+
+void MasterStation::MoveFromCheckupToAvailable(Rover* R)
+{
+	if (R->GetType() == 'P')
+	{
+		P_Rover* PRover = dynamic_cast<P_Rover*>(R);
+		PRover->SetMissionsDone(0);
+		Available_P_Rovers->Enqueue(PRover, PRover->GetSpeed());
+	}
+	else
+	{
+		E_Rover* ERover = dynamic_cast<E_Rover*>(R);
+		ERover->SetMissionsDone(0);
+		Available_E_Rovers->Enqueue(ERover, ERover->GetSpeed());
+	}
+}
+
+void MasterStation::MoveFromInExecutionToCheckup(Rover* TempRover)
+{
+	if (TempRover->GetType() == 'P')
+	{
+		P_Rover* PRover = dynamic_cast<P_Rover*>(TempRover); //downcast it in order to access checkup duration, and then move it to the checkup list
+		PRover->SetCheckUpCompletionDay(CurrentDay + PRover->GetCheckupD());
+		Checkup_Rovers->Enqueue(PRover, -(PRover->GetCheckUpCompletionDay()));
+	}
+	else
+	{
+		E_Rover* ERover = dynamic_cast<E_Rover*>(TempRover); //downcast it in order to access checkup duration, and then move it to the checkup list
+		ERover->SetCheckUpCompletionDay(CurrentDay + ERover->GetCheckupD());
+		Checkup_Rovers->Enqueue(ERover, -(ERover->GetCheckUpCompletionDay()));
+	}
+}
+
+void MasterStation::MoveFromInExecutionToAvailable(Rover* TempRover)
+{
+	if (TempRover->GetType() == 'P')
+	{
+		P_Rover* PRover = dynamic_cast<P_Rover*>(TempRover);
+
+		Available_P_Rovers->Enqueue(PRover, PRover->GetSpeed());
+	}
+	else // if it's not polar, then it's definitely emergency
+	{
+		E_Rover* ERover = dynamic_cast<E_Rover*>(TempRover);
+
+		Available_E_Rovers->Enqueue(ERover, ERover->GetSpeed());
+	}
+}
+
+void MasterStation::MoveFromInExecutionToMaintenance(Rover* R)
+{
+	R->SetMaintCompletionDay(CurrentDay + (R->GetMaintDur()));
+	Maintainance_Rovers->Enqueue(R, -(R->GetMaintCompletionDay()));
+}
+
+
+
+
 //incomplete in this version
 void MasterStation::Checkfailed() {
 
@@ -557,6 +755,20 @@ void MasterStation::Checkfailed() {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ///////////////Auxillary Utilities////////////////

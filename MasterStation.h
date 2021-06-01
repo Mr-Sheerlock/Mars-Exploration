@@ -117,10 +117,23 @@ public:
 
 	///////////////////////////////////////////
 	void CheckRoverArrived();
-	void CheckupComplete();
+
+	void UpdateRover(Rover*, Mission*); //update the data members of the rover
+
+	bool CheckMaint(Rover*); //Check if a rover needs maintenance
+	
 	void Maint_Complete();  //Maintainance Completion Check
 
+	void CheckupComplete();
+	
+	void DoesItNeedCheckUp(Rover* R); //checks if a rover needs checkup. If so, then its NeedCheckup Data member is set to true.
+	void MoveFromCheckupToAvailable(Rover* R);
+	
+	void MoveFromInExecutionToCheckup(Rover* R);
+	
+	void MoveFromInExecutionToAvailable(Rover* R);
 
+	void MoveFromInExecutionToMaintenance(Rover* R);
 
 
 	void AssignMission();

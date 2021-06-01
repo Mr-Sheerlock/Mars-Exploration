@@ -6,15 +6,18 @@ Rover::Rover(int id, int s)
 {
 	ID = id;
 	Speed = s;
-	Health = 100;      // ie .100%
 
-	MissionID = -1;
+	//Initialize data members:
+	TotalDist = 0;
+	TotalMDur = 0;
+	HighSigMissNum = 0;
+	Health = 90;
 
+	CheckUpCompletionDay = -50;
 	NeedsCheckup = 0;
+	//AssignedMission = nullptr;
 }
 
-int Rover::MissionsB4Checkup=10; //set an initial value
-int Rover::MaintDur=10;
 
 Rover::~Rover()
 {
@@ -43,9 +46,14 @@ void Rover::SetMissionsB4Checkup(int n)
 	MissionsB4Checkup = n;
 }
 
+int Rover::GetMissionsB4Checkup()
+{
+	return MissionsB4Checkup;
+}
+
 void  Rover::setMaintDur(int MDur)
 {
-	//if (MDur < 0) { MainDur = 10; return; }
+	
 	MaintDur = MDur;
 }
 
@@ -54,16 +62,8 @@ int Rover::GetMaintDur()
 	return MaintDur;
 }
 
-
-void Rover::SetMissionID(int ID) {
-
-	MissionID = ID;
-}
-
-int Rover::GetMissionID() {
-
-	return MissionID;
-}
+int Rover::MissionsB4Checkup=10; //set an initial value
+int Rover::MaintDur=10;
 
 void Rover::SetCompletionDay(int ArrivalD) {
 
@@ -89,6 +89,17 @@ int Rover::GetArrive2Target() {
 	return Arrive2Target;
 }
 
+void Rover::SetAssignedMission(Mission* mission)
+{
+	AssignedMission = mission;
+}
+
+Mission* Rover::GetAssignedMission()
+{
+	return AssignedMission;
+}
+
+//Checkup
 
 void Rover::SetNeedCheck(bool x) {
 
@@ -108,4 +119,89 @@ void Rover::SetCheckUpCompletionDay(int x)
 int Rover::GetCheckUpCompletionDay()
 {
 	return CheckUpCompletionDay;
+}
+
+void Rover::SetMissionsDone(int x)
+{
+	MissionsDone = x;
+}
+
+int Rover::GetMissionsDone()
+{
+	return MissionsDone;
+}
+
+//Maintainance:
+
+void Rover::UpdateTotalDist(int D)
+{
+	TotalDist += D;
+}
+
+void Rover::UpdateTotalMDur(int MDur)
+{
+	TotalMDur += MDur;
+}
+
+void Rover::IncrementHighSigMissNum()
+{
+	HighSigMissNum++;
+}
+
+void Rover::SetMaintCompletionDay(int MCD)
+{
+	MaintCompletionDay = MCD;
+}
+
+void Rover::UpdateHealth()
+{
+	if (TotalMDur > 20)
+	{
+		Health -= 30;
+		TotalMDur = 0;
+	}
+	if (TotalDist > 1500)
+	{
+		Health -= 30;
+		TotalDist = 0;
+	}
+	if (HighSigMissNum > 4)
+	{
+		Health -= 30;
+		HighSigMissNum = 0;
+	}
+}
+
+int Rover::GetTotalDist()
+{
+	return TotalDist;
+}
+
+int Rover::GetTotalMDur()
+{
+	return TotalMDur;
+}
+
+int Rover::GetHighSigMissNum()
+{
+	return HighSigMissNum;
+}
+
+int Rover::GetMaintCompletionDay()
+{
+	return MaintCompletionDay;
+}
+
+int Rover::GetHealth()
+{
+	return Health;
+}
+
+void Rover::ResetMaintValues()
+{
+	TotalDist = 0;
+	TotalMDur = 0;
+	HighSigMissNum = 0;
+	MaintCompletionDay = 0;
+	Health = 100;
 }
