@@ -66,6 +66,8 @@ public:
 
 	void PrintInCheckup(int* R, int count, int cE, int cP, char* type);
 
+	void PrintInMaint(int* R, int count, int mE, int mP, char* type);
+
 	void PrintStatements(int choice, int x);
 
 	void InteractiveMode();

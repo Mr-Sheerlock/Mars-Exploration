@@ -227,6 +227,13 @@ void UI::PrintInCheckup(int* R, int count, int cE, int cP, char* type)
 	PrintPolar(PR, cP);
 }
 
+
+//TODO: 
+void UI::PrintInMaint(int* R, int count, int mE, int mP, char* type) {
+
+
+}
+
 //Since making a function to print each day in the UI would require nearly 15 input
 //to make the function in the master station we had to handle the statements printed to illustrate the output
 //choice determines which statements should be printed

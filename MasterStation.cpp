@@ -181,7 +181,6 @@ void MasterStation::ReadEvents()
 ///////////////////////////OUTPUT//////////////////////////////////////
 void MasterStation::PrintEachDay()
 {
-	Queue<int> id;
 
 	int* WaitingEIds = NULL;
 	if (!(Waiting_E_Missions->isEmpty()))//in case of empty list(no waiting emergency missions)
@@ -274,6 +273,8 @@ void MasterStation::PrintEachDay()
 
 	IO_Interface->PrintStatements(5, CheckupRovers);
 	IO_Interface->PrintInCheckup(InCheckupIds, CheckupRovers, CheckupRoversE, CheckupRoversP, InCheckuptype);
+
+	//TODO: Maintainance Rovers
 
 	//CompletedMissions
 	int DailyCompletedCountP = DailyCompletedCount - DailyCompletedCountE;
