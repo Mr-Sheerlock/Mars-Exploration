@@ -53,7 +53,7 @@ public:
 	int static GetMaintDur();
 
 
-	int GetCompletionlDay();
+	int GetCompletionDay();
 	void SetCompletionDay(int x);
 
 	void SetArrive2Target(int x);

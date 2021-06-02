@@ -25,18 +25,23 @@ class MasterStation {
 
 	int AvRoversE, AvRoversP;
 
-	int CheckupRovers, CheckupRoversP;
+	int CheckupRovers, CheckupRoversE;
 	
 	int MaintRovers, MaintRoversP;
 
 
-	int NExecMiss;
+	int NExecMiss, NExecMissE;
 	int NExecRovs;
+
+	int DailyCompletedCount,DailyCompletedCountE;
 
 	//Failure
 	int ProbabilityOFfailure;
 
-
+	
+	//Output
+	int* DailyCompMissionsIDs;  //used to collect the completed missions ID's for the Output
+	char* DailyCompMissionsType;
 	//Others
 	UI* IO_Interface;
 
@@ -98,14 +103,15 @@ public:
 
 	/////////Output///////
 	void PrintEachDay();
-	int TakeIdsFromWaitingE(Queue<int>& Ids);
-	int TakeIdsFromWaitingP(Queue<int>& ids);
-	int TakeInfoFromInExecution(Queue<int>& C, Queue<int>& M, Queue<int>& R, Queue<char>& RM, Queue<char>& Ctype, int& comp, int& Ecomp, int& E);
-	int TakeIdsFromAvailableE(Queue<int>& id);
-	int TakeIdsFromAvailableP(Queue<int>& id);
-	int TakeInfoFromInCheckup(Queue<int>& id, Queue<char>& type, int& Ecount);
-	template<typename T>
-	void PutIdsInArray(Queue<T>& tempId, T*& ids, int size);
+	void TakeIdsFromWaitingE(int* Ids);
+	void TakeIdsFromWaitingP(int* ids);
+	void TakeInfoFromInExecution(int* M, int* R, char* RM, int* FR, char* FT);
+	void TakeIdsFromAvailableE(int* id);
+	void TakeIdsFromAvailableP(int* id);
+	void TakeInfoFromInCheckup(int* id, char* type);
+
+	void TakeInfoFromInMaint(int* id, char* type);
+	
 	void FinalOutput();	
 
 

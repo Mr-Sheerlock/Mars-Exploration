@@ -242,6 +242,8 @@ void UI::PrintStatements(int choice, int x)
 		cout << x << " " << "Waiting Missions:";
 		break;
 	case 3:
+
+		//TODO: Add something about failed missions
 		PrintBreakLine();
 		cout << x << " " << "In-Execution Missions/Rovers:";
 		cout << " ";

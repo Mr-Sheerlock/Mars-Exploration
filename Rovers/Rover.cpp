@@ -70,7 +70,7 @@ void Rover::SetCompletionDay(int ArrivalD) {
 	CompletionDay = ArrivalD;
 }
 
-int Rover::GetCompletionlDay() {
+int Rover::GetCompletionDay() {
 	return CompletionDay;
 }
 
