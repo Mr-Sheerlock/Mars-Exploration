@@ -18,30 +18,29 @@ class MasterStation {
 	//Stats
 	//Missions
 	int N_Missions;
+	int  NMissionsE;
 	
 	int WaitingMissionsP, WaitingMissionsE;
 	
 	int NExecMiss, NExecMissE;
 	
 	//Rovers
-	int N_Rovers;
 	
-	int NRoversP, NRoversE;
+	int  NRoversE, NRoversP;
 
-	int NMissionsP, NMissionsE;
 
 	int AvRoversE, AvRoversP;
 
 	int CheckupRovers, CheckupRoversE;
 	
-	int MaintRovers, MaintRoversP;
+	int MaintRovers, MaintRoversE;
 
 
 	int NExecRovs;
 
 	int DailyCompletedCount,DailyCompletedCountE;
 
-	int FailedPRover, FailedERover;
+	int Failed_P_Rover, Failed_E_Rover;
 
 
 	//Statistics
@@ -132,7 +131,7 @@ public:
 
 	/////////////Operations/////////////
 	
-	void ExecuteEvent(Queue<Event*>* EventList);
+	void ExecuteEvents();
 
 	void ExecuteDay(); 
 
@@ -142,9 +141,16 @@ public:
 		//->Missions Assignment
 
 
+	//Mission assignment
+	void AssignMission();
+	void CalculateArrive2Target(Rover* rover, int Tloc);
+	bool GetRoverFromMaintenance(Rover*& RoverNeeded, char Type);
+	void SearchForPolar(P_Rover*& NeededPRover, Queue<Rover*>*& TempQ);
+	void SearchForPolar_Emergency(E_Rover*& NeededERover, P_Rover*& NeededPRover, Queue<Rover*>*& TempQ);
+	void ReturnToMaint(Queue<Rover*>* TempQ);
+	void CheckMissionComplete();
 
-
-
+	void ReturnToMaint_FindRover(Rover* RoverToFind, Queue<Rover*>* TempQ);
 
 	///////////////////////////////////////////
 	void CheckRoverArrived();
@@ -158,6 +164,8 @@ public:
 	void CheckupComplete();
 	
 	void DoesItNeedCheckUp(Rover* R); //checks if a rover needs checkup. If so, then its NeedCheckup Data member is set to true.
+
+	//Movers
 	void MoveFromCheckupToAvailable(Rover* R);
 	
 	void MoveFromInExecutionToCheckup(Rover* R);
@@ -166,13 +174,9 @@ public:
 
 	void MoveFromInExecutionToMaintenance(Rover* R);
 
+	void MoveFromWaitingToInExecution(Mission* mission, Rover* rover);
 
-	void AssignMission();
 
-
-	
-	
-	void CheckMissionComplete();
 	
 	//prints the mission after its completion
 	//Failure

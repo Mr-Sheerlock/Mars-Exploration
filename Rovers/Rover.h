@@ -7,7 +7,7 @@ class Rover
 {
 
 	int ID;
-	int Speed; // in km/hr
+	float Speed; // in km/hr
 	char Type; // M, P, or E
 
 	
@@ -37,11 +37,11 @@ class Rover
 	Mission* AssignedMission;
 
 public:
-	Rover(int, int);
+	Rover(int, float);
 	~Rover();
 
-	virtual void SetSpeed(int s);
-	virtual int GetSpeed();
+	virtual void SetSpeed(float s);
+	virtual float GetSpeed();
 
 	virtual int GetID();
 

@@ -2,7 +2,7 @@
 
 
 
-Rover::Rover(int id, int s)
+Rover::Rover(int id, float s)
 {
 	ID = id;
 	Speed = s;
@@ -23,13 +23,13 @@ Rover::~Rover()
 {
 }
 
-void Rover::SetSpeed(int s)
+void Rover::SetSpeed(float s)
 {
 	if (s <= 0) { Speed = 1; return; }
 	Speed = s;
 }
 
-int Rover::GetSpeed()
+float Rover::GetSpeed()
 {
 	return Speed;
 }
