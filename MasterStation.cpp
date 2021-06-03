@@ -70,6 +70,9 @@ MasterStation::MasterStation()
 
 	srand(time(NULL) + N_Missions); // ensures that each run we get a new random output regarding the failure
 	
+	//Output
+	IO_Interface->WriteHeader(Output);
+
 }
 
 
@@ -292,10 +295,10 @@ void MasterStation::PrintEachDay()
 	}
 	
 	int* InMaintIds = NULL; char* InMaintType = NULL;
-	if (!(Checkup_Rovers->isEmpty()))
+	if (!(Maintainance_Rovers->isEmpty()))
 	{
-		InCheckupIds = new int[MaintRovers];
-		InCheckuptype = new char[MaintRovers];
+		InMaintIds = new int[MaintRovers];
+		InMaintType = new char[MaintRovers];
 		TakeInfoFromInMaint(InMaintIds, InMaintType);
 	}
 	
@@ -498,7 +501,7 @@ void MasterStation::TakeInfoFromInMaint(int* id, char* type)
 	}
 	while (temp.Dequeue(rtemp))
 	{
-		Checkup_Rovers->Enqueue(rtemp, (rtemp->GetMaintCompletionDay()* -1));
+		Maintainance_Rovers->Enqueue(rtemp, (rtemp->GetMaintCompletionDay()* -1));
 	}
 }
 
@@ -506,24 +509,28 @@ void MasterStation::TakeInfoFromInMaint(int* id, char* type)
 
 void MasterStation::FinalOutput()
 {
-	CurrentDay = 1;
 	int userChoice;
 	IO_Interface->ReadUserChoice(userChoice);
 	if (userChoice == 1 || userChoice == 2)
 	{
-		while (!(EventList->IsEmpty()) && !(N_Execution_Missions->isEmpty()))
+		/*while (!(EventList->IsEmpty()) && !(N_Execution_Missions->isEmpty()) && !(Waiting_E_Missions->isEmpty() && !(Waiting_P_Missions->IsEmpty))
 		{
+			ExecuteDay();
 			PrintEachDay();
 			if (userChoice == 1)
 				IO_Interface->InteractiveMode();
 			else IO_Interface->StepByStepMode();
-			CurrentDay++;
-		}
+		}*/
+		PrintEachDay();
+		if (userChoice == 1)
+			IO_Interface->InteractiveMode();
+		else IO_Interface->StepByStepMode();
 	}
-	else IO_Interface->SilentMode();
+	else
+	{
+		IO_Interface->SilentMode();
+	}
 }
-
-
 
 
 
@@ -576,6 +583,8 @@ void MasterStation::ExecuteDay() {
 	Maint_Complete();
 	AssignMission();
 	CurrentDay++;
+	DailyCompletedCount = 0;
+	DailyCompletedCountE = 0;
 }
 
 
@@ -614,6 +623,7 @@ void MasterStation::AssignMission() {
 				GetRoverFromMaintenance(rover, 'E');
 				if (rover)
 				{
+					Waiting_E_Missions->Dequeue(emission);
 					emission->AssignRover(rover);
 					MoveFromWaitingToInExecution(emission, rover);
 				}
@@ -627,7 +637,7 @@ void MasterStation::AssignMission() {
 	
 	//2-Assigning P-Missions
 	flag = true;
-	while (!(Waiting_P_Missions->IsEmpty()))
+	while (!(Waiting_P_Missions->IsEmpty()) && flag)
 	{
 		P_Rover* prover;
 		P_Mission* pmission;
@@ -712,6 +722,7 @@ bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 				EmergencyRover->SetSpeed(rover->GetSpeed() / 2);
 				RoverNeeded = EmergencyRover;
 				MaintRovers--;
+				MaintRoversE--;
 				return true;
 			}
 			else if (PolarRover)
@@ -751,7 +762,6 @@ void MasterStation::SearchForPolar(P_Rover*& NeededPRover, Queue<Rover*>*& TempQ
 					if (rover->GetSpeed() > NeededPRover->GetSpeed())
 					{
 						NeededPRover = (P_Rover*)rover;
-						NExecRovs++;
 					}
 				}
 				else
@@ -958,6 +968,7 @@ void MasterStation::UpdateRover(Rover* rover, Mission* mission)
 		rover->IncrementHighSigMissNum();
 	}
 	rover->UpdateHealth();
+	rover->SetAssignedMission(NULL);
 }
 
 bool MasterStation::CheckMaint(Rover* rover)
@@ -1128,6 +1139,10 @@ void MasterStation::MoveFromInExecutionToMaintenance(Rover* R)
 	Maintainance_Rovers->Enqueue(R, -(R->GetMaintCompletionDay()));
 	NExecRovs--;
 	MaintRovers++;
+	if (R->GetType() == 'E')
+	{
+		MaintRoversE++;
+	}
 }
 
 
