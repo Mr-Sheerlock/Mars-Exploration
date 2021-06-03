@@ -42,12 +42,11 @@ public:
 
 	void WriteHeader(ofstream& Output);
 
-	void WriteMissions(int M_Mission, int E_Mission, int P_Mission, ofstream& Output);
+	void WriteMissions(int E_Mission, int P_Mission, ofstream& Output);
 
-	void WriteRovers(int M_Rover, int E_Rover, int P_Rover, ofstream& Output);
+	void WriteRovers(int E_Rover, int P_Rover, ofstream& Output);
 
-	void WriteStats(int Avg_Wait, int Avg_Exec, int Auto_P, ofstream& Output);
-
+	void WriteStats(int Avg_Wait, int Avg_Exec, ofstream& Output);
 
 	//2-To Console:
 
@@ -58,11 +57,11 @@ public:
 	void PrintPolar(int* P, int count);
 
 	//prints the given parameter according to the format specified for Missions/Rovers
-	void PrintMissionsAndRovers(int* M, int* R, int count, char type);
+	void PrintMissionsAndRovers(int* M, int* R, int count, int* F, int Fcount, char type);
 
 	void PrintBreakLine();
 
-	void PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type);
+	void PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type, int* F, int FCount, int FP, int FE, char* FType);
 
 	void PrintInCheckup(int* R, int count, int cE, int cP, char* type);
 

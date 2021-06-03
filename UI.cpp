@@ -1,7 +1,7 @@
 #include "UI.h"
 using namespace std;
 
-///////////////////////////////////////INPUT//////////////////////////////////////////
+////////////////////////INPUT//////////////////////////////////////////
 void UI::ReadRoversNumbers(ifstream& Input, int& P, int& E)
 {
 	Input >> P >> E;
@@ -54,7 +54,7 @@ void UI::ReadUserChoice(int& choice)
 }
 
 
-///////////////////////////////////////OUTPUT//////////////////////////////////////////
+///////////////////////OUTPUT//////////////////////////////////////////
 
 ///1- To File: 
 void UI::WriteEachDay(int CD, int ID, int FD, int WD, int ED, ofstream& Output)
@@ -69,26 +69,25 @@ void UI::WriteHeader(ofstream& Output)
 	Output << "CD" << "   " << "ID" << "   " << "FD" << "   " << "WD" << "   " << "ED" << endl;
 }
 
-void UI::WriteMissions(int M_Mission, int E_Mission, int P_Mission, ofstream& Output) {
-	Output << "Missions:" << " " << M_Mission + E_Mission + P_Mission << " " << "[M:" << " " << M_Mission << "," << "" << "P:" << " " << P_Mission << "," << "" << "E:" << " " << E_Mission << "]" << endl;
+void UI::WriteMissions(int E_Mission, int P_Mission, ofstream& Output) {
+	Output << "Missions:" << " " << E_Mission + P_Mission << " " << "[P:" << " " << P_Mission << "," << "" << "E:" << " " << E_Mission << "]" << endl;
 
 
 }
 
-void UI::WriteRovers(int M_Rover, int E_Rover, int P_Rover, ofstream& Output) {
+void UI::WriteRovers(int E_Rover, int P_Rover, ofstream& Output) {
 
-	Output << "Rovers:" << " " << M_Rover + E_Rover + P_Rover << "    " << "[M:" << " " << M_Rover << "," << "" << "P:" << " " << P_Rover << "," << "" << "E:" << " " << E_Rover << "]" << endl;
+	Output << "Rovers:" << " " << E_Rover + P_Rover << "    " << "[P:" << " " << P_Rover << "," << "" << "E:" << " " << E_Rover << "]" << endl;
 
 
 }
 
-void UI::WriteStats( int Avg_Wait, int Avg_Exec, int Auto_P, ofstream& Output)
+void UI::WriteStats(int Avg_Wait, int Avg_Exec, ofstream& Output)
 {
 	Output << "Avg Wait = " << Avg_Wait << "," << " " << "Avg Exec = " << Avg_Exec << endl;
-	Output << "Auto-promoted: " << Auto_P << "%" << endl;
+
 	Output.close();
 }
-
 
 
 ///2- To Console:
@@ -134,29 +133,72 @@ void UI::PrintPolar(int* P, int count)
 
 
 //Prints in-EXECUTION M/R
-void UI::PrintMissionsAndRovers(int* M, int* R, int count, char type)
+void UI::PrintMissionsAndRovers(int* M, int* R, int count, int* F, int Fcount, char type)
 {
-	if (count == 0)
+	if (count == 0 && Fcount == 0)
 		return;
 	cout << " ";
 	if (type == 'E')
 		cout << "[";
 	else cout << "(";
-	for (int i = 0; i < count; i++)
+	if (count == 0)
 	{
-		if (i == count - 1)
+		for (int i = 0; i < Fcount; i++)
 		{
-			cout << M[i] << "/" << R[i];
-			if (type == 'E')
-				cout << "]";
-			else cout << ")";
-		}
-		else
-		{
-			cout << M[i] << "/" << R[i] << ",";
+			if (i == Fcount - 1)
+			{
+				cout << 'X' << "/" << F[i];
+				if (type == 'E')
+					cout << "]";
+				else cout << ")";
+			}
+			else
+			{
+				cout << 'X' << "/" << F[i] << ",";
+			}
 		}
 	}
+	else if (Fcount == 0)
+	{
+		for (int i = 0; i < count; i++)
+		{
+			if (i == count - 1)
+			{
+				cout << M[i] << "/" << R[i];
+				if (type == 'E')
+					cout << "]";
+				else cout << ")";
+			}
+			else
+			{
+				cout << M[i] << "/" << R[i] << ",";
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < Fcount; i++)
+		{
+			cout << 'X' << "/" << F[i] << ",";
+		}
+		for (int i = 0; i < count; i++)
+		{
+			if (i == count - 1)
+			{
+				cout << M[i] << "/" << R[i];
+				if (type == 'E')
+					cout << "]";
+				else cout << ")";
+			}
+			else
+			{
+				cout << M[i] << "/" << R[i] << ",";
+			}
+		}
+	}
+
 }
+
 
 
 void UI::PrintBreakLine()
@@ -176,11 +218,25 @@ void UI::PrintBreakLine()
 //then we have to classify them first before doing the operation
 //Assume that M[] , R[] are arrays that are filled blindly with all ID's irrespective of the types
 
-void UI::PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type)
+void UI::PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type, int* F, int FCount, int FP, int FE, char* FType)
 {
 
 	int* EM = new int[cE]; int* ER = new int[cE]; int c1 = 0;
 	int* PM = new int[cP]; int* PR = new int[cP]; int c3 = 0;
+	int* PF = new int[FP]; int* EF = new int[FE]; int c4 = 0;
+	for (int i = 0; i < FCount; i++)
+	{
+		if (FType[i] == 'P')
+		{
+			PF[c4] = F[i];
+			c4++;
+		}
+		else
+		{
+			EF[c4] = F[i];
+			c4++;
+		}
+	}
 	for (int i = 0; i < count; i++)
 	{
 		if (type[i] == 'E')
@@ -196,8 +252,14 @@ void UI::PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type)
 			c3++;
 		}
 	}
-	PrintMissionsAndRovers(EM, ER, cE, 'E');
-	PrintMissionsAndRovers(PM, PR, cP, 'P');
+	PrintMissionsAndRovers(EM, ER, cE, PF, FP, 'E');
+	PrintMissionsAndRovers(PM, PR, cP, EF, FE, 'P');
+	delete[] EM;
+	delete[] ER;
+	delete[] PM;
+	delete[] PR;
+	delete[] PF;
+	delete[] EF;
 }
 
 
@@ -228,10 +290,27 @@ void UI::PrintInCheckup(int* R, int count, int cE, int cP, char* type)
 }
 
 
-//TODO: 
-void UI::PrintInMaint(int* R, int count, int mE, int mP, char* type) {
-
-
+void UI::PrintInMaint(int* R, int count, int mE, int mP, char* type)
+{
+	int* ER = new int[mE]; int c1 = 0;
+	int* PR = new int[mP]; int c3 = 0;
+	for (int i = 0; i < count; i++)
+	{
+		if (type[i] == 'E')
+		{
+			ER[c1] = R[i];
+			c1++;
+		}
+		else
+		{
+			PR[c3] = R[i];
+			c3++;
+		}
+	}
+	PrintEmergency(ER, mE);
+	PrintPolar(PR, mP);
+	delete[] ER;
+	delete[] PR;
 }
 
 //Since making a function to print each day in the UI would require nearly 15 input
@@ -250,9 +329,8 @@ void UI::PrintStatements(int choice, int x)
 		break;
 	case 3:
 
-		//TODO: Add something about failed missions
 		PrintBreakLine();
-		cout << x << " " << "In-Execution Missions/Rovers:";
+		cout << x << " " << "In-Execution Missions/Rovers and Failed Missions' Rovers:";
 		cout << " ";
 		break;
 	case 4:

@@ -16,14 +16,14 @@ bool Formulation_Event::Execute(MasterStation* MS) {
 	if (type == 'P') {
 		P_Mission* newMission = new P_Mission(getID(), getEventDay(), Target_Location, Mission_Duration, Significance);
 		MS->ReturnWaitingPolar()->Enqueue(newMission);
-		MS->IncrementWTP();
+		MS->IncrementWaitingPolarCount();
 	}
 	else
 		if (type == 'E') {
 			int tempPriority = 2; //temporarily 
 			E_Mission* newMission = new E_Mission(getID(), getEventDay(), Target_Location, Mission_Duration, Significance, tempPriority);
 			MS->ReturnWaitingEmerg()->Enqueue(newMission, tempPriority);
-			MS->IncrementWTE();
+			MS->IncrementWaitingEmerCount();
 
 		}
 	return true;

@@ -16,12 +16,19 @@ class MasterStation {
 
 
 	//Stats
+	//Missions
 	int N_Missions;
-	int N_Rovers;
-	int NRoversP, NRoversE;
-	int NMissionsP, NMissionsE;
-
+	
 	int WaitingMissionsP, WaitingMissionsE;
+	
+	int NExecMiss, NExecMissE;
+	
+	//Rovers
+	int N_Rovers;
+	
+	int NRoversP, NRoversE;
+
+	int NMissionsP, NMissionsE;
 
 	int AvRoversE, AvRoversP;
 
@@ -30,10 +37,16 @@ class MasterStation {
 	int MaintRovers, MaintRoversP;
 
 
-	int NExecMiss, NExecMissE;
 	int NExecRovs;
 
 	int DailyCompletedCount,DailyCompletedCountE;
+
+	int FailedPRover, FailedERover;
+
+
+	//Statistics
+	int Total_Wait; //for use in statistics
+	int Total_InExecution; //for use in statistics 
 
 	//Failure
 	int ProbabilityOFfailure;
@@ -49,7 +62,7 @@ class MasterStation {
 	ifstream Input;
 	ofstream Output;
 
-	/////////////////////////////////////////Lists///////////////////////////////////////
+	////////////////////////Lists///////////////////////////////////////
 
 	Queue<Event*>* EventList;
 
@@ -87,8 +100,8 @@ public:
 	//Data member getters /incrementers
 	PriorityQueue<E_Mission*>* ReturnWaitingEmerg();
 	Queue<P_Mission*>* ReturnWaitingPolar();
-	void IncrementWTP();
-	void IncrementWTE();
+	void IncrementWaitingPolarCount();
+	void IncrementWaitingEmerCount();
 
 
 
@@ -175,7 +188,8 @@ public:
 
 
 
-	void CalculateStats();
+	void CalculateStats(int& AvgWait, int& AvgExec, int FinalDay);
+
 
 
 

@@ -62,6 +62,42 @@ MasterStation::MasterStation()
 }
 
 
+MasterStation::~MasterStation()
+{
+	delete IO_Interface;
+	delete EventList;
+	E_Rover* TempE;
+	while (!Available_E_Rovers->isEmpty())
+	{
+		Available_E_Rovers->Dequeue(TempE);
+		delete TempE;
+	}
+	delete Available_E_Rovers;
+	P_Rover* TempP;
+	while (!Available_P_Rovers->isEmpty())
+	{
+		Available_P_Rovers->Dequeue(TempP);
+		delete TempP;
+	}
+	delete Available_P_Rovers;
+	delete N_Execution_Missions;
+	delete N_Execution_Rovers;
+	delete Waiting_E_Missions;
+	delete Waiting_P_Missions;
+	Rover* TempR;
+	while (!Checkup_Rovers->isEmpty())
+	{
+		Checkup_Rovers->Dequeue(TempR);
+		delete TempR;
+	}
+	delete Checkup_Rovers;
+	while (!Maintainance_Rovers->isEmpty())
+	{
+		Maintainance_Rovers->Dequeue(TempR);
+		delete TempR;
+	}
+	delete Maintainance_Rovers;
+}
 
 ////////Data member Getters / incrementers for events
 
@@ -75,11 +111,11 @@ Queue<P_Mission*>* MasterStation::ReturnWaitingPolar()
 	return Waiting_P_Missions;
 }
 
-void MasterStation::IncrementWTP() {
+void MasterStation::IncrementWaitingPolarCount() {
 	WaitingMissionsP++;
 }
 
-void MasterStation::IncrementWTE(){
+void MasterStation::IncrementWaitingEmerCount(){
 	WaitingMissionsE++;
 }
 
@@ -255,13 +291,15 @@ void MasterStation::PrintEachDay()
 	
 	//InExecution Missions/Rovers AND Failed Rovers
 
-	//TODO: Add somehting in the statement about mission failure
+	
 	IO_Interface->PrintStatements(3, NExecMiss);
 
 	int NExecMissP = NExecMiss - NExecMissE;
 
 	//TODO: Modify the function to include failed Rovers in the output
-	IO_Interface->PrintInExecution(InExecution_M_Ids, InExecution_R_Ids, NExecMiss, NExecMissE, NExecMissP, N_Exectype);
+	int FailedRovers = NExecRovs - NExecMiss;
+
+	IO_Interface->PrintInExecution(InExecution_M_Ids, InExecution_R_Ids, NExecMiss, NExecMissE, NExecMissP, N_Exectype, F_InExecution_R_Ids, FailedRovers, FailedPRover, FailedERover, Ftype);
 
 	//Available Rovers
 	IO_Interface->PrintStatements(4, AvRoversE + AvRoversP);
@@ -274,17 +312,34 @@ void MasterStation::PrintEachDay()
 	IO_Interface->PrintStatements(5, CheckupRovers);
 	IO_Interface->PrintInCheckup(InCheckupIds, CheckupRovers, CheckupRoversE, CheckupRoversP, InCheckuptype);
 
-	//TODO: Maintainance Rovers
+	//Maintainance Rovers
+	int MaintRoversE = MaintRovers - MaintRoversP;
+	IO_Interface->PrintStatements(7, MaintRovers);
+	IO_Interface->PrintInMaint(InMaintIds, MaintRovers, MaintRoversE, MaintRoversP, InMaintType);
 
 	//CompletedMissions
 	int DailyCompletedCountP = DailyCompletedCount - DailyCompletedCountE;
 	
 	IO_Interface->PrintStatements(6, DailyCompletedCount);
 	IO_Interface->PrintInCheckup(DailyCompMissionsIDs, DailyCompletedCount, DailyCompletedCountE, DailyCompletedCountP, DailyCompMissionsType);
-	//note to self ba3d masla7 el error a8iar esmha f el UI
+
 
 
 	//TODO: DONT FORGET TO DEALLOCATE THE MEMORY 
+	
+	delete[] WaitingEIds;
+	delete[] WaitingPIds;
+	delete[] InExecution_M_Ids;
+	delete[] InExecution_R_Ids;
+	delete[] F_InExecution_R_Ids;
+	delete[] N_Exectype;
+	delete[] Ftype;
+	delete[] AvEmergency_Ids;
+	delete[] AvPolar_Ids;
+	delete[] InCheckupIds;
+	delete[] InCheckuptype;
+	delete[] InMaintIds;
+	delete[] InMaintType;
 
 	//DONT FORGET TO RESET THE DAILY COMP COUNT
 	DailyCompletedCount = 0;
@@ -344,8 +399,8 @@ void MasterStation::TakeInfoFromInExecution( int* M, int* R, char* RM, int* FR, 
 				i++;
 			}//if rover is getting back from a failed mission
 			else {
-				FR[i] = temprover->GetID();
-				FT[i] = temprover->GetType();
+				FR[j] = temprover->GetID();
+				FT[j] = temprover->GetType();
 				j++;
 			}
 
@@ -483,7 +538,16 @@ void MasterStation::ExecuteDay() {
 		//Proposed Order: Events->Rovers Arrival->Rovers Checkup-> Rovers Maintainance->
 		//->Missions Assignment
 	
-	//1-Check if there are Any Events O(1)
+	//1-Check if there are Any Events O(1)if (EventList->IsEmpty() && Waiting_E_Missions->isEmpty() && Waiting_P_Missions->IsEmpty() && N_Execution_Missions->isEmpty())
+	{
+		// Last Day, its position in this function is subject to change.
+		int AvgWait = 0;
+		int AvgExec = 0;
+		CalculateStats(AvgWait, AvgExec, CurrentDay);
+		IO_Interface->WriteMissions(NMissionsE, NMissionsP, Output);
+		IO_Interface->WriteRovers(NRoversE, NRoversP, Output);
+		IO_Interface->WriteStats(AvgWait, AvgExec, Output);
+	}
 	AssignMission();
 	Checkfailed();
 	CurrentDay++;
@@ -848,7 +912,15 @@ void MasterStation::Checkfailed() {
 
 
 
+//Statistics
+//should be called at final day.
+void MasterStation::CalculateStats(int& AvgWait, int& AvgExec, int FinalDay) 
+{
 
+	AvgWait = Total_Wait / FinalDay;
+	AvgExec = Total_InExecution / FinalDay;
+
+}
 
 
 ///////////////Auxillary Utilities////////////////
@@ -868,8 +940,4 @@ double MasterStation:: CalculateProbability(int DesiredFailure, int Duration) {
 	double DailyFailure = 100 - DailySuccess;  //in percent
 
 	return DailyFailure;
-}
-
-MasterStation::~MasterStation()
-{
 }
