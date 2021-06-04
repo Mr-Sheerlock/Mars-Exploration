@@ -46,7 +46,7 @@ MasterStation::MasterStation()
 
 	////////////////////////////////FAILURE///////////////////////////////////////////////
 
-	ProbabilityOFfailure = 5; // in percent
+	ProbabilityOFfailure = 0; // in percent
 
 	//////////////////////////////////////////////////////////////////////////////////////
 	
@@ -624,7 +624,7 @@ void MasterStation::ExecuteDay() {
 		DailyCompMissionsIDs= new int [NExecMiss];
 		DailyCompMissionsType = new char[NExecMiss];
 	}
-
+	
 	ExecuteEvents();
 	Checkfailed();
 	CheckRoverArrived();
@@ -683,6 +683,9 @@ void MasterStation::ExecuteEvents()
 void MasterStation::AssignMission() {
 	int i = CurrentDay;
 	bool flag = true;//to break from while loop if no more missions can be assigned
+
+
+	
 
 	//1-Assigning E-Missions first 
 	while (!(Waiting_E_Missions->isEmpty()) && flag)
@@ -1007,13 +1010,14 @@ bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 		//Restrictions:
 		//Min Speed = 1
 		// If only 1 day is left to complete the maintenance
-		Queue <Rover*>* TempQ;
+		Queue <Rover*>* TempQ = new Queue<Rover*>;
 		Rover* rover = nullptr;
 		P_Rover* PolarRover = nullptr;
 		E_Rover* EmergencyRover = nullptr;
 		if (Type == 'P')
 		{
 			//search for polar only
+			cout << "Lol xd";
 			SearchForPolar(PolarRover, TempQ);
 			if (!PolarRover)
 			{
@@ -1062,6 +1066,7 @@ bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 				return false;
 			}
 		}
+		delete TempQ;
 	}
 }
 
