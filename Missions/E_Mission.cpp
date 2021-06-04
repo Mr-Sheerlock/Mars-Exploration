@@ -1,16 +1,16 @@
 #include "E_Mission.h"
 
 
-E_Mission::E_Mission(int Id, int FD, int TLOC, int Duration, int significance, int priority) : Mission(Id, FD, TLOC, Duration, significance) {
+E_Mission::E_Mission(int Id, int FD, int TLOC, int Duration, int significance) : Mission(Id, FD, TLOC, Duration, significance) {
 
 	SetTYP('E');
 	Assigned_Rover = nullptr;
 
-	SetPriority(priority);
+	SetPriority();
 }
 
-void E_Mission::SetPriority(int P) {
-	MissionPriority = P;
+void E_Mission::SetPriority() {
+	MissionPriority = GetTLOC() + 5* GetDuration() + 100* GetSIG() - GetFormulationDay()  ;
 
 	// P =  1 *TLOC + 5 *MD + 100*SIG - 1 * FD   
 	

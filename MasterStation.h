@@ -127,7 +127,8 @@ public:
 	void FinalOutput();	
 
 
-	void PrintMission();
+	///Checks if the Numbers are consistent or not
+	void CheckConsistent();
 
 	/////////////Operations/////////////
 	

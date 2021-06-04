@@ -146,6 +146,8 @@ void MasterStation::ReadInputFile()
 		ReadMaintDur();
 		ReadEvents();
 		Input.close();
+
+		CheckConsistent();
 	}
 	else
 	{
@@ -234,6 +236,31 @@ void MasterStation::ReadEvents()
 }
 
 
+void MasterStation::CheckConsistent() {
+	
+	//We here process the corner case where there are missions but no corresponding rovers
+
+	//there are no rovers
+	if (NMissionsE!=0 && (NRoversE + NRoversP ==0)) {
+		// TODO: Call UI to write there is inconsistency
+	}
+
+	//if there is polar but no polar rovers
+	if ((N_Missions -NMissionsE != 0) && NRoversP == 0) {
+
+		if (NRoversE) {
+			//cancel all the Polar 
+			//and call UI that at the end there was no Rovers to finish the Polar missions
+
+		}
+		
+
+	}
+
+
+
+
+}
 ///////////////////////////OUTPUT//////////////////////////////////////
 
 //1-To Console
@@ -1204,9 +1231,7 @@ void MasterStation::Checkfailed() {
 			}
 			else{
 				//reset the priority
-				// Don't forget to ADD the actual Equation
-				int Priority = 10;  
-				E->SetPriority(Priority);
+				E->SetPriority();
 				Waiting_E_Missions->Enqueue(E,E->GetPriority());
 				WaitingMissionsE++;
 				NExecMissE--;

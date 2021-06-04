@@ -19,9 +19,9 @@ class E_Mission : public Mission
 
 public: 
 	
-	E_Mission(int Id, int FD, int TLOC, int Duration, int significance, int priority);
+	E_Mission(int Id, int FD, int TLOC, int Duration, int significance);
 
-	void SetPriority(int P);
+	void SetPriority();
 
 	int  GetPriority();
 
