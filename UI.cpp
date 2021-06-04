@@ -1,4 +1,6 @@
 #include "UI.h"
+#include "iomanip"
+
 using namespace std;
 
 ////////////////////////INPUT//////////////////////////////////////////
@@ -59,7 +61,7 @@ void UI::ReadUserChoice(int& choice)
 ///1- To File: 
 void UI::WriteEachDay(int CD, int ID, int FD, int WD, int ED, ofstream& Output)
 {
-	Output << CD << "    " << ID << "    " << FD << "    " << WD << "    " << ED << endl;
+	Output << left << setw(5) << CD << setw(5) << ID << setw(5) << FD << setw(5) << WD << setw(5) << ED << endl;
 }
 
 
@@ -376,7 +378,7 @@ void UI::InteractiveMode()
 
 void UI::StepByStepMode()
 {
-	Sleep(1000);
+	//Sleep(1000);
 }
 
 

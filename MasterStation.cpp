@@ -46,7 +46,7 @@ MasterStation::MasterStation()
 
 	////////////////////////////////FAILURE///////////////////////////////////////////////
 
-	ProbabilityOFfailure = 0; // in percent
+	ProbabilityOFfailure = 5; // in percent
 
 	//////////////////////////////////////////////////////////////////////////////////////
 	
@@ -211,7 +211,7 @@ void MasterStation::ReadRovers()
 
 void MasterStation::ReadCheckupInfo()
 {
-	int N, CM, CP, CE;
+	int N, CP, CE;
 	IO_Interface->Read_N_CheckupDur(Input, N, CP, CE);
 	Rover::SetMissionsB4Checkup(N);
 	P_Rover::Set_CheckupD(CP);
@@ -284,7 +284,6 @@ bool MasterStation::CheckConsistency() {
 
 
 ///////////////////////////OUTPUT//////////////////////////////////////
-
 //1-To Console
 void MasterStation::PrintEachDay()
 {
@@ -304,21 +303,32 @@ void MasterStation::PrintEachDay()
 		TakeIdsFromWaitingP(WaitingPIds); //initializes the array
 	}
 
-	int* InExecution_M_Ids = NULL, * InExecution_R_Ids = NULL,*F_InExecution_R_Ids=NULL;
-	char* N_Exectype = NULL, *Ftype=NULL;
+	int* InExecution_M_Ids = NULL, * InExecution_R_Ids = NULL;
+	char* N_Exectype = NULL;
+	int* F_InExecution_R_Ids = NULL;
+	char* Ftype = NULL;
+
 	if (!(N_Execution_Missions->isEmpty()))
 	{
 		InExecution_M_Ids = new int[NExecMiss];
 		InExecution_R_Ids = new int[NExecMiss]; //we assume that they are the same size and handle the failed mission rovers in another array
-		F_InExecution_R_Ids = new int[NExecRovs - NExecMiss]; //Rovers' numbers are always higher than missions
-		
-		N_Exectype = new char[NExecMiss];
+
+		F_InExecution_R_Ids = new int[NExecRovs - NExecMiss]; //Rovers' numbers are always higher	than missions
 		Ftype = new char[NExecRovs - NExecMiss]; //difference is the number of rovers who has failed missions
+
+		N_Exectype = new char[NExecMiss];
+
 
 		TakeInfoFromInExecution(InExecution_M_Ids, InExecution_R_Ids, N_Exectype, F_InExecution_R_Ids, Ftype);
 	}
+	else {
+		//in this case, all the rovers are failed rovers
+		F_InExecution_R_Ids = new int[NExecRovs ]; //NexecMiss=0
+		Ftype = new char[NExecRovs]; //NexecMiss=0
+		TakeFailedFromInExecRov( F_InExecution_R_Ids, Ftype);
+	}
 
-
+	
 
 	int* AvEmergency_Ids = NULL;
 	if (!(Available_E_Rovers->isEmpty()))
@@ -482,6 +492,27 @@ void MasterStation::TakeInfoFromInExecution( int* M, int* R, char* RM, int* FR, 
 	}
 }
 
+void MasterStation::TakeFailedFromInExecRov(int* FR, char* FT)
+{
+	Queue<Rover*> t;
+	Rover* temprover;
+
+	int j = 0;
+	//in this case, all the rovers are failed rovers
+	while (N_Execution_Rovers->Dequeue(temprover))
+	{
+		FR[j] = temprover->GetID();
+		FT[j] = temprover->GetType();
+		j++;
+		t.Enqueue(temprover);
+	}
+	
+	while (t.Dequeue(temprover))
+	{
+		N_Execution_Rovers->Enqueue(temprover, (temprover->GetCompletionDay() * -1));
+	}
+}
+
 
 void MasterStation::TakeIdsFromAvailableE(int* id)
 {
@@ -555,9 +586,6 @@ void MasterStation::TakeInfoFromInMaint(int* id, char* type)
 		Maintainance_Rovers->Enqueue(rtemp, (rtemp->GetMaintCompletionDay()* -1));
 	}
 }
-
-
-
 void MasterStation::FinalOutput()
 {
 	if (UserChoice == 1 || UserChoice == 2)
@@ -1270,9 +1298,8 @@ void MasterStation::Checkfailed() {
 		//if it failed 
 		if (randomF<MissionFailP) {
 			
-
+			cout << "FAILEDDDDDD!" << endl;
 			int SD_o = M->GetStartingDay();
-
 			int MD_o = M->GetDuration();
 			//restart FormulationDay
 			M->SetFormulationDay(CurrentDay);
@@ -1397,4 +1424,5 @@ double MasterStation:: CalculateProbability(int DesiredFailure, int Duration) {
 	double DailyFailure = 100 - DailySuccess;  //in percent
 
 	return DailyFailure;
+	//cout << "DAILY FAILURE: " << DailyFailure;
 }

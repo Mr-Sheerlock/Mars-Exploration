@@ -125,6 +125,7 @@ public:
 	void TakeIdsFromWaitingE(int* Ids);
 	void TakeIdsFromWaitingP(int* ids);
 	void TakeInfoFromInExecution(int* M, int* R, char* RM, int* FR, char* FT);
+	void TakeFailedFromInExecRov(int* FR, char* FT);
 	void TakeIdsFromAvailableE(int* id);
 	void TakeIdsFromAvailableP(int* id);
 	void TakeInfoFromInCheckup(int* id, char* type);
