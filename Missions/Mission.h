@@ -23,8 +23,6 @@ class Mission
 
 	char type;
 
-	bool Status;     //0 for waiting/failed  , 1 for ongoing
-
 
 	
 
@@ -61,9 +59,6 @@ public:
 
 	void SetTYP(char x);
 	char GetTYP();
-
-	void SetStatus(bool x);
-	bool GetStatus();
 
 	virtual Rover* GetAssignedRover()=0; //depends on each type
 	

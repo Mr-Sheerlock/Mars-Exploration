@@ -332,7 +332,7 @@ void UI::PrintStatements(int choice, int x)
 	switch (choice)
 	{
 	case 1:
-		cout << "Current Day:" << x << endl;
+		cout <<endl<< "Current Day:" << x << endl;
 		break;
 	case 2:
 		cout << x << " " << "Waiting Missions:";
@@ -353,6 +353,11 @@ void UI::PrintStatements(int choice, int x)
 		cout << " ";
 		break;
 	case 6:
+		PrintBreakLine();
+		cout << x << " " << "In-Maintainance Rovers:";
+		cout << " ";
+		break;
+	case 7:
 		PrintBreakLine();
 		cout << x << " " << "Completed Missions:";
 		break;

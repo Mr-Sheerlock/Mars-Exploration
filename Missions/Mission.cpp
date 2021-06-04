@@ -17,7 +17,6 @@ Mission::Mission(int Id, int FD, int TLOC, int Duration, int significance) {
 	
 	//Might possibly need TotalWaiting days member if it's in the output
 	
-	Status=0;
 
 
 }
@@ -62,10 +61,5 @@ int Mission::GetStartingDay() { return Starting_Day; }
 
 void Mission::SetTYP(char x) { type = x; }
 char Mission::GetTYP() { return type; }
-
-
-void Mission::SetStatus(bool x ) { Status = x; }
-bool Mission::GetStatus() { return Status; }
-
 
 

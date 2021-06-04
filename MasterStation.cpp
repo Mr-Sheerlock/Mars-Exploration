@@ -295,6 +295,8 @@ void MasterStation::PrintEachDay()
 		WaitingEIds = new int[WaitingMissionsE];
 		TakeIdsFromWaitingE(WaitingEIds);  //initializes the array
 	}
+
+	
 	 int* WaitingPIds = NULL;
 	if (!(Waiting_P_Missions->IsEmpty()))
 	{
@@ -319,7 +321,7 @@ void MasterStation::PrintEachDay()
 
 
 	int* AvEmergency_Ids = NULL;
-	if (Available_E_Rovers->isEmpty())
+	if (!(Available_E_Rovers->isEmpty()))
 	{
 		AvEmergency_Ids = new int[AvRoversE];
 		TakeIdsFromAvailableE(AvEmergency_Ids);
@@ -385,16 +387,16 @@ void MasterStation::PrintEachDay()
 
 	//Maintainance Rovers
 	int MaintRoversP = MaintRovers - MaintRoversE;
-	IO_Interface->PrintStatements(7, MaintRovers);
+	IO_Interface->PrintStatements(6, MaintRovers);
 	IO_Interface->PrintInMaint(InMaintIds, MaintRovers, MaintRoversE, MaintRoversP, InMaintType);
 
 	//CompletedMissions
 	int DailyCompletedCountP = DailyCompletedCount - DailyCompletedCountE;
 	
-	IO_Interface->PrintStatements(6, DailyCompletedCount);
+	IO_Interface->PrintStatements(7, DailyCompletedCount);
 	IO_Interface->PrintInCheckup(DailyCompMissionsIDs, DailyCompletedCount, DailyCompletedCountE, DailyCompletedCountP, DailyCompMissionsType);
 
-
+	IO_Interface->PrintBreakLine();
 
 	//TODO: DONT FORGET TO DEALLOCATE THE MEMORY 
 	
@@ -602,7 +604,7 @@ void MasterStation::ExecuteDay() {
 	CheckupComplete();
 	Maint_Complete();
 	AssignMission();
-	//FinalOutput();
+	FinalOutput();
 	CurrentDay++;
 	DailyCompletedCount = 0;
 	DailyCompletedCountE = 0;
