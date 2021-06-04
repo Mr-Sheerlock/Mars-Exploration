@@ -46,7 +46,11 @@ public:
 
 	void WriteRovers(int E_Rover, int P_Rover, ofstream& Output);
 
-	void WriteStats(int Avg_Wait, int Avg_Exec, ofstream& Output);
+	void WriteStats(float Avg_Wait, float Avg_Exec, ofstream& Output);
+
+	void WritePRoversWarning(ofstream& Output);
+
+	void WriteCriticalWarning(ofstream& Output);
 
 	//2-To Console:
 
@@ -68,6 +72,8 @@ public:
 	void PrintInMaint(int* R, int count, int mE, int mP, char* type);
 
 	void PrintStatements(int choice, int x);
+
+	void PrintFilenotFound();
 
 	void InteractiveMode();
 

@@ -14,6 +14,11 @@ Formulation_Event::Formulation_Event(int ed, int id, char typ, int tloc, int mdu
 bool Formulation_Event::Execute(MasterStation* MS) {
 
 	if (type == 'P') {
+		if (MS->Get_N_RoversP() == 0) {
+
+			return false;
+		}
+
 		P_Mission* newMission = new P_Mission(getID(), getEventDay(), Target_Location, Mission_Duration, Significance);
 		MS->ReturnWaitingPolar()->Enqueue(newMission);
 		MS->IncrementWaitingPolarCount();

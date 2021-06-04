@@ -9,10 +9,14 @@ int main() {
 
 	//Read input
 	MS.ReadInputFile();
+	if (MS.CheckConsistency()) {
 
-	while (!MS.CheckLastDay()) {
+		while (!MS.CheckLastDay()) {
 
-		MS.ExecuteDay();
+			MS.ExecuteDay();
+		}
 	}
-	
+	else {
+		cout << "There were no Polar or Emergency Rovers, so simulation did not start! :D ";
+	}
 }

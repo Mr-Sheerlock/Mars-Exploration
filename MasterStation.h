@@ -44,8 +44,8 @@ class MasterStation {
 
 
 	//Statistics
-	int Total_Wait; //for use in statistics
-	int Total_InExecution; //for use in statistics 
+	float Total_Wait; //for use in statistics
+	float Total_InExecution; //for use in statistics 
 
 	//Failure
 	int ProbabilityOFfailure;
@@ -103,6 +103,7 @@ public:
 	void IncrementWaitingPolarCount();
 	void IncrementWaitingEmerCount();
 
+	int Get_N_RoversP();
 
 
 	//////////Input///////
@@ -129,7 +130,7 @@ public:
 
 
 	///Checks if the Numbers are consistent or not
-	void CheckConsistent();
+	bool CheckConsistency();
 
 	/////////////Operations/////////////
 	
@@ -190,7 +191,7 @@ public:
 
 
 
-	void CalculateStats(int& AvgWait, int& AvgExec, int FinalDay);
+	void CalculateStats(float& AvgWait, float& AvgExec);
 
 
 

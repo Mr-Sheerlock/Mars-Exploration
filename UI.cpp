@@ -82,11 +82,21 @@ void UI::WriteRovers(int E_Rover, int P_Rover, ofstream& Output) {
 
 }
 
-void UI::WriteStats(int Avg_Wait, int Avg_Exec, ofstream& Output)
+void UI::WriteStats(float Avg_Wait, float Avg_Exec, ofstream& Output)
 {
 	Output << "Avg Wait = " << Avg_Wait << "," << " " << "Avg Exec = " << Avg_Exec << endl;
 
 	Output.close();
+}
+
+void UI::WritePRoversWarning(ofstream& Output)
+{
+	Output << "There were no Polar Rovers, so no polar missions were formulated or executed! " <<endl;
+}
+
+void UI::WriteCriticalWarning(ofstream& Output)
+{
+	Output << "There were no Polar or Emergency Rovers, so simulation did not start! :D " << endl;
 }
 
 
@@ -347,6 +357,11 @@ void UI::PrintStatements(int choice, int x)
 		cout << x << " " << "Completed Missions:";
 		break;
 	}
+}
+
+void UI::PrintFilenotFound()
+{
+	cout << "File not found" << endl;
 }
 
 void UI::InteractiveMode()

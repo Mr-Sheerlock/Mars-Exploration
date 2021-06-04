@@ -44,11 +44,16 @@ MasterStation::MasterStation()
 	DailyCompletedCount = 0;
 	DailyCompletedCountE = 0;
 
-	//Failure
+	////////////////////////////////FAILURE///////////////////////////////////////////////
 
 	ProbabilityOFfailure = 0; // in percent
 
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	//Statistics
+	Total_Wait = 0;
 
+	Total_InExecution = 0;
 
 	IO_Interface = new UI();
 	Output.open("Output.txt");
@@ -81,7 +86,7 @@ MasterStation::MasterStation()
 	srand(time(NULL) + N_Missions); // ensures that each run we get a new random output regarding the failure
 	
 	//Output
-	IO_Interface->WriteHeader(Output);
+	
 
 }
 
@@ -143,6 +148,12 @@ void MasterStation::IncrementWaitingEmerCount(){
 	WaitingMissionsE++;
 }
 
+int MasterStation::Get_N_RoversP()
+{
+
+	return NRoversP;
+}
+
 ////////////////////////////////INPUT///////////////////////////////////
 
 void MasterStation::ReadInputFile()
@@ -157,11 +168,10 @@ void MasterStation::ReadInputFile()
 		ReadEvents();
 		Input.close();
 
-		CheckConsistent();
 	}
 	else
 	{
-		cout << "File not found" << endl;
+		IO_Interface->PrintFilenotFound();
 	}
 }
 
@@ -246,31 +256,33 @@ void MasterStation::ReadEvents()
 }
 
 
-void MasterStation::CheckConsistent() {
+bool MasterStation::CheckConsistency() {
 	
 	//We here process the corner case where there are missions but no corresponding rovers
 
-	//there are no rovers
+	//If there are no rovers, return false to end the simulation abruptly
 	if (NMissionsE!=0 && (NRoversE + NRoversP ==0)) {
-		// TODO: Call UI to write there is inconsistency
+		IO_Interface->WriteCriticalWarning(Output);
+		return false;
 	}
 
-	//if there is polar but no polar rovers
+	//If there is polar missions but no polar rovers, we run the simulation normally but we don't formulate them
 	if ((N_Missions -NMissionsE != 0) && NRoversP == 0) {
 
-		if (NRoversE) {
-			//cancel all the Polar 
+		if (NRoversE!=0) {
 			//and call UI that at the end there was no Rovers to finish the Polar missions
-
+			IO_Interface->WritePRoversWarning(Output);
 		}
 		
-
 	}
-
+	IO_Interface->WriteHeader(Output);
+	return true;
 
 
 
 }
+
+
 ///////////////////////////OUTPUT//////////////////////////////////////
 
 //1-To Console
@@ -590,6 +602,7 @@ void MasterStation::ExecuteDay() {
 	CheckupComplete();
 	Maint_Complete();
 	AssignMission();
+	cout << CurrentDay<< " ";
 	CurrentDay++;
 	DailyCompletedCount = 0;
 	DailyCompletedCountE = 0;
@@ -606,9 +619,9 @@ bool MasterStation::CheckLastDay() {
 	if (EventList->IsEmpty() && Waiting_E_Missions->isEmpty() && Waiting_P_Missions->IsEmpty() && N_Execution_Missions->isEmpty())
 	{
 		// Last Day, its position in this function is subject to change.
-		int AvgWait = 0;
-		int AvgExec = 0;
-		CalculateStats(AvgWait, AvgExec, CurrentDay);
+		float AvgWait = 0;
+		float AvgExec = 0;
+		CalculateStats(AvgWait, AvgExec);
 		IO_Interface->WriteMissions(NMissionsE, N_Missions - NMissionsE, Output);
 		IO_Interface->WriteRovers(NRoversE, NRoversP, Output);
 		IO_Interface->WriteStats(AvgWait, AvgExec, Output);
@@ -680,21 +693,27 @@ void MasterStation::AssignMission() {
 					flag = false;
 				}
 			}
+			else {
+				flag = false;
+			}
 		}
 	}
 	
 	//2-Assigning P-Missions
+
 	flag = true;
 	while (!(Waiting_P_Missions->IsEmpty()) && flag)
 	{
 		P_Rover* prover;
 		P_Mission* pmission;
+		//if there is a polar rover
 		if (Available_P_Rovers->Dequeue(prover))
 		{
 			Waiting_P_Missions->Dequeue(pmission);
 			pmission->AssignRover(prover);
 			MoveFromWaitingToInExecution(pmission, prover);
 		}
+		//if there isn't a polar rover, try to see maintainance
 		else
 		{
 			Waiting_P_Missions->Peek(pmission);
@@ -722,72 +741,111 @@ void MasterStation::AssignMission() {
 	}
 }
 
-bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
+
+
+void MasterStation::CheckMissionComplete()
 {
-	RoverNeeded = NULL;
-	if (Maintainance_Rovers->isEmpty())
+	//If a mission is completed:
+	// Call check rover arrival 
+	//print Mission Done,...etc
+	Mission* TempMission;
+	while (N_Execution_Missions->Peek(TempMission))
 	{
-		return false;
-	}
-	else
-	{
-		//Restrictions:
-		//Min Speed = 1
-		// If only 1 day is left to complete the maintenance
-		Queue <Rover*>* TempQ;
-		Rover* rover = nullptr;
-		P_Rover* PolarRover = nullptr;
-		E_Rover* EmergencyRover = nullptr;
-		if (Type == 'P')
+		if (TempMission->GetCompletionDay() == CurrentDay)
 		{
-			//search for polar only
-			SearchForPolar(PolarRover, TempQ);
-			if (!PolarRover)
+			NExecMiss--;
+
+			N_Execution_Missions->Dequeue(TempMission);
+			Total_Wait = Total_Wait + TempMission->GetWaitingDays();
+			Total_InExecution = Total_InExecution + TempMission->GetExecutionDays();
+			TempMission->UnAssignRover();
+			
+			//Print Mission Done
+			IO_Interface->WriteEachDay(TempMission->GetCompletionDay(), TempMission->GetID(), TempMission->GetFormulationDay(), TempMission->GetWaitingDays(), TempMission->GetExecutionDays(), Output);
+
+			DailyCompMissionsIDs[DailyCompletedCount]=TempMission->GetID();
+			DailyCompMissionsType[DailyCompletedCount]=TempMission->GetTYP();
+			
+			DailyCompletedCount++;
+			if (TempMission->GetTYP() == 'E') {
+				DailyCompletedCountE++;
+				NExecMissE--;
+			}
+			
+		}
+			//First one didn't finish, do nothing
+		else {
+				return;
+		}
+	}
+
+}
+
+
+void MasterStation::CheckRoverArrived()
+{
+	Rover* TempRover;
+	CheckupComplete();
+	while (N_Execution_Rovers->Peek(TempRover))
+	{
+		if (TempRover->GetCompletionDay() == CurrentDay)
+		{
+			N_Execution_Rovers->Dequeue(TempRover);
+			Mission* AssignedMission = TempRover->GetAssignedMission();
+
+			if (AssignedMission == nullptr) //In case of failure
 			{
-				//Return to maintenance
-				ReturnToMaint(TempQ);
-				return false;
+				MoveFromInExecutionToCheckup(TempRover);
+				if (TempRover->GetType() == 'E') {
+					Failed_E_Rover--;
+				}
+				else {
+					Failed_P_Rover--;
+				}
 			}
 			else
 			{
-				//Return to maintenance and find rover
-				ReturnToMaint_FindRover(PolarRover, TempQ);
-				//Half the speed
-				PolarRover->SetSpeed(rover->GetSpeed() / 2);
-				RoverNeeded = PolarRover;
-				MaintRovers--;
-				return true;
+				UpdateRover(TempRover, AssignedMission);
+				DoesItNeedCheckUp(TempRover);
+				bool Maintenance = false;
+				bool Checkup = false;
+				Maintenance = CheckMaint(TempRover);
+				if (TempRover->GetNeedCheck() == 1)
+				{
+					Checkup = true;
+				}
+				else
+				{
+					Checkup = false;
+				}
+
+				if (Checkup && Maintenance)
+				{
+					//Needs both maintenance and checkup
+					//Reset Checkup values
+					TempRover->SetMissionsDone(0);
+					MoveFromInExecutionToMaintenance(TempRover);
+				}
+				else if (!Checkup && !Maintenance)
+				{
+					//Doesn't need Maintenance or checkup
+					MoveFromInExecutionToAvailable(TempRover);
+				}
+				else if (Checkup)
+				{
+					//Checkup only
+					MoveFromInExecutionToCheckup(TempRover);
+				}
+				else if (Maintenance)
+				{
+					//Maintenance only
+					MoveFromInExecutionToMaintenance(TempRover);
+				}
 			}
 		}
 		else
 		{
-			//search for both polar and emergency
-			SearchForPolar_Emergency(EmergencyRover, PolarRover, TempQ);
-			if (EmergencyRover)
-			{
-				//Return to maintenance and find rover
-				ReturnToMaint_FindRover(EmergencyRover, TempQ);
-				//Half the speed
-				EmergencyRover->SetSpeed(rover->GetSpeed() / 2);
-				RoverNeeded = EmergencyRover;
-				MaintRovers--;
-				MaintRoversE--;
-				return true;
-			}
-			else if (PolarRover)
-			{
-				ReturnToMaint_FindRover(PolarRover, TempQ);
-				//Half the speed
-				PolarRover->SetSpeed(rover->GetSpeed() / 2);
-				RoverNeeded = PolarRover;
-				MaintRovers--;
-				return true;
-			}
-			else
-			{
-				ReturnToMaint(TempQ);
-				return false;
-			}
+			return;
 		}
 	}
 }
@@ -870,41 +928,6 @@ void MasterStation::SearchForPolar_Emergency(E_Rover*& NeededERover, P_Rover*& N
 }
 
 
-void MasterStation::CheckMissionComplete()
-{
-	//If a mission is completed:
-	// Call check rover arrival 
-	//print statistics,...etc
-	Mission* TempMission;
-	while (N_Execution_Missions->Peek(TempMission))
-	{
-		if (TempMission->GetCompletionDay() == CurrentDay)
-		{
-			NExecMiss--;
-
-			N_Execution_Missions->Dequeue(TempMission);
-			Total_Wait = Total_Wait + TempMission->GetWaitingDays();
-			Total_InExecution = Total_InExecution + TempMission->GetExecutionDays();
-			TempMission->UnAssignRover();
-			IO_Interface->WriteEachDay(TempMission->GetCompletionDay(), TempMission->GetID(), TempMission->GetFormulationDay(), TempMission->GetWaitingDays(), TempMission->GetExecutionDays(), Output);
-
-			DailyCompMissionsIDs[DailyCompletedCount]=TempMission->GetID();
-			DailyCompMissionsType[DailyCompletedCount]=TempMission->GetTYP();
-			
-			DailyCompletedCount++;
-			if (TempMission->GetTYP() == 'E') {
-				DailyCompletedCountE++;
-				NExecMissE--;
-			}
-			
-		}
-			//First one didn't finish, do nothing
-		else {
-				return;
-		}
-	}
-
-}
 
 
 void MasterStation::ReturnToMaint(Queue<Rover*>* TempQ)
@@ -940,74 +963,77 @@ void MasterStation::CalculateArrive2Target(Rover* rover, int Tloc)
 
 
 //Checkup and Maintainance
-void MasterStation::CheckRoverArrived()
+
+
+bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 {
-	Rover* TempRover;
-	CheckupComplete();
-	while (N_Execution_Rovers->Peek(TempRover))
+	RoverNeeded = NULL;
+	if (Maintainance_Rovers->isEmpty())
 	{
-		if (TempRover->GetCompletionDay() == CurrentDay)
+		return false;
+	}
+	else
+	{
+		//Restrictions:
+		//Min Speed = 1
+		// If only 1 day is left to complete the maintenance
+		Queue <Rover*>* TempQ;
+		Rover* rover = nullptr;
+		P_Rover* PolarRover = nullptr;
+		E_Rover* EmergencyRover = nullptr;
+		if (Type == 'P')
 		{
-			N_Execution_Rovers->Dequeue(TempRover);
-			Mission* AssignedMission = TempRover->GetAssignedMission();
-			if (AssignedMission == nullptr) //In case of failure
+			//search for polar only
+			SearchForPolar(PolarRover, TempQ);
+			if (!PolarRover)
 			{
-				MoveFromInExecutionToCheckup(TempRover);
-				if (TempRover->GetType() == 'E') {
-					Failed_E_Rover--;
-				}
-				else {
-					Failed_P_Rover--;
-				}
+				//Return to maintenance
+				ReturnToMaint(TempQ);
+				return false;
 			}
 			else
 			{
-				UpdateRover(TempRover, AssignedMission);
-				DoesItNeedCheckUp(TempRover);
-				bool Maintenance = false;
-				bool Checkup = false;
-				Maintenance = CheckMaint(TempRover);
-				if (TempRover->GetNeedCheck() == 1)
-				{
-					Checkup = true;
-				}
-				else
-				{
-					Checkup = false;
-				}
-
-				if (Checkup && Maintenance)
-				{
-					//Needs both maintenance and checkup
-					//Reset Checkup values
-					TempRover->SetMissionsDone(0);
-					MoveFromInExecutionToMaintenance(TempRover);
-				}
-				else if (!Checkup && !Maintenance)
-				{
-					//Doesn't need Maintenance or checkup
-					MoveFromInExecutionToAvailable(TempRover);
-				}
-				else if (Checkup)
-				{
-					//Checkup only
-					MoveFromInExecutionToCheckup(TempRover);
-				}
-				else if (Maintenance)
-				{
-					//Maintenance only
-					MoveFromInExecutionToMaintenance(TempRover);
-				}
+				//Return to maintenance and find rover
+				ReturnToMaint_FindRover(PolarRover, TempQ);
+				//Half the speed
+				PolarRover->SetSpeed(rover->GetSpeed() / 2);
+				RoverNeeded = PolarRover;
+				MaintRovers--;
+				return true;
 			}
 		}
 		else
 		{
-			return;
+			//search for both polar and emergency
+			SearchForPolar_Emergency(EmergencyRover, PolarRover, TempQ);
+			if (EmergencyRover)
+			{
+				//Return to maintenance and find rover
+				ReturnToMaint_FindRover(EmergencyRover, TempQ);
+				//Half the speed
+				EmergencyRover->SetSpeed(rover->GetSpeed() / 2);
+				RoverNeeded = EmergencyRover;
+				MaintRovers--;
+				MaintRoversE--;
+				return true;
+			}
+			else if (PolarRover)
+			{
+				ReturnToMaint_FindRover(PolarRover, TempQ);
+				//Half the speed
+				PolarRover->SetSpeed(rover->GetSpeed() / 2);
+				RoverNeeded = PolarRover;
+				MaintRovers--;
+				return true;
+			}
+			else
+			{
+				ReturnToMaint(TempQ);
+				return false;
+			}
 		}
 	}
 }
-
-
 
 void MasterStation::UpdateRover(Rover* rover, Mission* mission)
 {
@@ -1101,8 +1127,13 @@ void MasterStation::MoveFromWaitingToInExecution(Mission* mission, Rover* rover)
 	//CD=ED+WD+FD
 	int CD = (2 * rover->GetArrive2Target() + mission->GetDuration()) + CurrentDay ;
 	mission->SetCompletionDay(CD);
+
+	rover->SetCompletionDay(CD);
+	
 	mission->SetExecutionDays(2 * rover->GetArrive2Target() + mission->GetDuration());
+
 	mission->SetWaitingDays(CurrentDay - mission->GetFormulationDay());
+
 	N_Execution_Missions->Enqueue(mission, -1 * CD);
 	N_Execution_Rovers->Enqueue(rover, -1 * CD);
 	NExecRovs++; NExecMiss++;
@@ -1338,11 +1369,11 @@ void MasterStation::Checkfailed() {
 
 //Statistics
 //should be called at final day.
-void MasterStation::CalculateStats(int& AvgWait, int& AvgExec, int FinalDay) 
+void MasterStation::CalculateStats(float& AvgWait, float& AvgExec) 
 {
 
-	AvgWait = Total_Wait / FinalDay;
-	AvgExec = Total_InExecution / FinalDay;
+	AvgWait = Total_Wait / N_Missions;
+	AvgExec = Total_InExecution / N_Missions;
 
 }
 
