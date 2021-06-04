@@ -68,21 +68,22 @@ class MasterStation {
 	PriorityQueue<P_Rover*>* Available_P_Rovers; //available polar rovers
 	PriorityQueue<E_Rover*>* Available_E_Rovers; //available emergency rovers
 	
+	Queue<P_Mission*>* Waiting_P_Missions;  
+
+	PriorityQueue<E_Mission*>* Waiting_E_Missions; //Priority
 	
 	PriorityQueue<Rover*>* N_Execution_Rovers;   //negative Completion Day 
 												 //or the day it will reach the station
 												 //in case of failure
+
+	PriorityQueue<Mission*>* N_Execution_Missions;  //negative of Competion day
 
 	PriorityQueue<Rover*>* Checkup_Rovers;       //negative Completion of Checkup Day 
 
 	PriorityQueue<Rover*>* Maintainance_Rovers;  //negative Completion of Maint. Day
 
 	
-	Queue<P_Mission*>* Waiting_P_Missions;  
-
-	PriorityQueue<E_Mission*>* Waiting_E_Missions; //Priority
 	
-	PriorityQueue<Mission*>* N_Execution_Missions;  //negative of Competion day
 
 	///No need for the Completed Missions because once completed, the gets printed
 
@@ -136,12 +137,8 @@ public:
 
 	void ExecuteDay(); 
 
-	//Notice that here, we need to scheme the order of operation so as to not miss anything
-
-		//Proposed Order: Checkfail->  Events->Rovers Arrival->Rovers Checkup-> Rovers Maintainance->
-		//->Missions Assignment
-
-
+	bool CheckLastDay();
+	
 	//Mission assignment
 	void AssignMission();
 	void CalculateArrive2Target(Rover* rover, int Tloc);

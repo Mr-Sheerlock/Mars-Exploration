@@ -3,16 +3,16 @@
 using namespace std;
 
 
-
-
-////I think some counter of days or somehting? 
 int main() {
 	
 	MasterStation MS;
 
 	//Read input
-	//MS.ReadInputFile();
+	MS.ReadInputFile();
 
+	while (!MS.CheckLastDay()) {
 
-	//MS.FinalOutput();
+		MS.ExecuteDay();
+	}
+	
 }

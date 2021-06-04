@@ -55,14 +55,16 @@ public:
 		return true;
 	}
 
-	T Peek(T& item) {
+	bool Peek(T& item) {
 		if (IsEmpty())
 		{
-			return NULL;
+			item= NULL;
+			return false;
 		}
 		else
 		{
-			return Head->getitem();
+			item= Head->getitem();
+			return true;
 		}
 
 	}

@@ -41,14 +41,19 @@ MasterStation::MasterStation()
 	Failed_P_Rover = 0;
 	Failed_E_Rover = 0;
 
-	ProbabilityOFfailure = 5; // in percent
-
 	DailyCompletedCount = 0;
 	DailyCompletedCountE = 0;
+
+	//Failure
+
+	ProbabilityOFfailure = 0; // in percent
+
 
 
 	IO_Interface = new UI();
 	Output.open("Output.txt");
+
+
 	//Lists
 
 	EventList = new Queue<Event*>();
@@ -56,17 +61,22 @@ MasterStation::MasterStation()
 	Available_P_Rovers = new PriorityQueue<P_Rover*>(); //According to speed
 	Available_E_Rovers = new PriorityQueue<E_Rover*>();
 
+	Waiting_E_Missions = new PriorityQueue<E_Mission*>;
+
+	Waiting_P_Missions = new Queue<P_Mission*>;
+
+
 	N_Execution_Rovers= new PriorityQueue<Rover*>;   
 
 	N_Execution_Missions= new PriorityQueue<Mission*>;
 
+	Checkup_Rovers = new PriorityQueue<Rover*>;
+
+	Maintainance_Rovers = new PriorityQueue<Rover*>;
+
 	Waiting_P_Missions= new Queue<P_Mission*>;
 
-	/*PriorityQueue<Rover*>*Checkup_Rovers; 
 
-	PriorityQueue<Rover*>*Maintainance_Rovers; */
-
-	Waiting_E_Missions = new PriorityQueue<E_Mission*>;
 
 	srand(time(NULL) + N_Missions); // ensures that each run we get a new random output regarding the failure
 	
@@ -560,48 +570,19 @@ void MasterStation::FinalOutput()
 }
 
 
-
 ///////////////////////////Operations//////////////////////////////////////
-
-
-
-void MasterStation::ExecuteEvents()
-{
-	Event* Executed_Event;
-	if (EventList->IsEmpty())
-	{
-		return;
-	}
-	Event* Ev;
-	while (EventList->Peek(Ev) && EventList->Peek(Ev)->getEventDay() == CurrentDay)
-	{
-		EventList->Dequeue(Executed_Event);
-		Executed_Event->Execute(this);
-		delete Executed_Event;
-		Executed_Event = nullptr;
-	}
-}
 
 
 void MasterStation::ExecuteDay() {
 	
-		//Notice that here, we need to scheme the order of operation so as to not miss anything
+	//Proposed Order: Events->Rovers Arrival->Rovers Checkup-> Rovers Maintainance->
+	//->Missions Assignment
 
-		//Proposed Order: Events->Rovers Arrival->Rovers Checkup-> Rovers Maintainance->
-		//->Missions Assignment
-	
-	//Last Day check
-	if (EventList->IsEmpty() && Waiting_E_Missions->isEmpty() && Waiting_P_Missions->IsEmpty() && N_Execution_Missions->isEmpty())
-	{
-		// Last Day, its position in this function is subject to change.
-		int AvgWait = 0;
-		int AvgExec = 0;
-		CalculateStats(AvgWait, AvgExec, CurrentDay);
-		IO_Interface->WriteMissions(NMissionsE, N_Missions -NMissionsE, Output);
-		IO_Interface->WriteRovers(NRoversE,NRoversP, Output);
-		IO_Interface->WriteStats(AvgWait, AvgExec, Output);
+	if (NExecMiss!=0) {
+		DailyCompMissionsIDs= new int [NExecMiss];
+		DailyCompMissionsType = new char[NExecMiss];
 	}
-	
+
 	ExecuteEvents();
 	Checkfailed();
 	CheckRoverArrived();
@@ -612,6 +593,46 @@ void MasterStation::ExecuteDay() {
 	CurrentDay++;
 	DailyCompletedCount = 0;
 	DailyCompletedCountE = 0;
+	
+	delete[] DailyCompMissionsIDs;
+	delete[] DailyCompMissionsType;
+	DailyCompMissionsIDs = nullptr;
+	DailyCompMissionsType = nullptr;
+}
+
+
+
+bool MasterStation::CheckLastDay() {
+	if (EventList->IsEmpty() && Waiting_E_Missions->isEmpty() && Waiting_P_Missions->IsEmpty() && N_Execution_Missions->isEmpty())
+	{
+		// Last Day, its position in this function is subject to change.
+		int AvgWait = 0;
+		int AvgExec = 0;
+		CalculateStats(AvgWait, AvgExec, CurrentDay);
+		IO_Interface->WriteMissions(NMissionsE, N_Missions - NMissionsE, Output);
+		IO_Interface->WriteRovers(NRoversE, NRoversP, Output);
+		IO_Interface->WriteStats(AvgWait, AvgExec, Output);
+		return true;
+	}
+	return false;
+}
+
+//Events
+void MasterStation::ExecuteEvents()
+{
+	Event* Executed_Event;
+	if (EventList->IsEmpty())
+	{
+		return;
+	}
+	Event* Ev;
+	while (EventList->Peek(Ev) && Ev->getEventDay() == CurrentDay)
+	{
+		EventList->Dequeue(Executed_Event);
+		Executed_Event->Execute(this);
+		delete Executed_Event;
+		Executed_Event = nullptr;
+	}
 }
 
 
@@ -705,6 +726,7 @@ bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 {
 	if (Maintainance_Rovers->isEmpty())
 	{
+		RoverNeeded = NULL;
 		return false;
 	}
 	else
@@ -875,6 +897,10 @@ void MasterStation::CheckMissionComplete()
 				NExecMissE--;
 			}
 			
+		}
+			//First one didn't finish, do nothing
+		else {
+				return;
 		}
 	}
 
@@ -1073,7 +1099,7 @@ void MasterStation::MoveFromWaitingToInExecution(Mission* mission, Rover* rover)
 	rover->SetAssignedMission(mission);
 	CalculateArrive2Target(rover, mission->GetTLOC());
 	//CD=ED+WD+FD
-	int CD = (2 * rover->GetArrive2Target() + mission->GetDuration()) + (CurrentDay - mission->GetFormulationDay()) + mission->GetFormulationDay();
+	int CD = (2 * rover->GetArrive2Target() + mission->GetDuration()) + CurrentDay ;
 	mission->SetCompletionDay(CD);
 	mission->SetExecutionDays(2 * rover->GetArrive2Target() + mission->GetDuration());
 	mission->SetWaitingDays(CurrentDay - mission->GetFormulationDay());
@@ -1180,6 +1206,9 @@ void MasterStation::MoveFromInExecutionToMaintenance(Rover* R)
 void MasterStation::Checkfailed() {
 
 	if (N_Execution_Missions->isEmpty()) { return; }
+	if (ProbabilityOFfailure == 0) {
+		return; //no need to calculate or check
+	}
 
 	PriorityQueue<Mission*>tempM; //should be sorted according to negative of completion day
 
