@@ -1214,6 +1214,9 @@ void MasterStation::MoveFromCheckupToAvailable(Rover* R)
 //Moves rover to chck
 void MasterStation::MoveFromInExecutionToCheckup(Rover* TempRover)
 {
+	//reset the counter
+	TempRover->SetMissionsDone(0);
+	
 	if (TempRover->GetType() == 'P')
 	{
 		P_Rover* PRover = dynamic_cast<P_Rover*>(TempRover); //downcast it in order to access checkup duration, and then move it to the checkup list
@@ -1291,6 +1294,10 @@ void MasterStation::Checkfailed() {
 		
 		double MissionFailP = CalculateProbability(ProbabilityOFfailure, MissionSpan);
 		
+		cout << "The Daily Mission Span is: " << MissionSpan<<endl;
+		cout << "The Daily Mission FailP is: " << MissionFailP<<endl;
+
+
 		double randomF = ((rand() % (10000)) / 100.0); //generates a random float from 0 to 100 With Percision up to TWO decimal places
 		
 		//So we need to add extra 5 decimal places for accuracy 
@@ -1299,6 +1306,7 @@ void MasterStation::Checkfailed() {
 			a = rand() % 10;
 			randomF = randomF + a * pow(0.1, 3 + i);
 		}
+
 
 		//if it failed 
 		if (randomF<MissionFailP) {
