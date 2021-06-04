@@ -724,9 +724,9 @@ void MasterStation::AssignMission() {
 
 bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 {
+	RoverNeeded = NULL;
 	if (Maintainance_Rovers->isEmpty())
 	{
-		RoverNeeded = NULL;
 		return false;
 	}
 	else
