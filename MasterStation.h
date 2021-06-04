@@ -54,6 +54,11 @@ class MasterStation {
 	//Output
 	int* DailyCompMissionsIDs;  //used to collect the completed missions ID's for the Output
 	char* DailyCompMissionsType;
+
+	int UserChoice; //1 for Interactive, 2 for Step-By-Step, 3 for Silent
+
+	bool SilentModeFlag;
+
 	//Others
 	UI* IO_Interface;
 
@@ -128,6 +133,7 @@ public:
 	
 	void FinalOutput();	
 
+	void ReadUserChoice();
 
 	///Checks if the Numbers are consistent or not
 	bool CheckConsistency();

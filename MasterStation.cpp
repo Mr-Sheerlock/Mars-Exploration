@@ -86,7 +86,7 @@ MasterStation::MasterStation()
 	srand(time(NULL) + N_Missions); // ensures that each run we get a new random output regarding the failure
 	
 	//Output
-	
+	SilentModeFlag = true;
 
 }
 
@@ -558,27 +558,27 @@ void MasterStation::TakeInfoFromInMaint(int* id, char* type)
 
 void MasterStation::FinalOutput()
 {
-	int userChoice;
-	IO_Interface->ReadUserChoice(userChoice);
-	if (userChoice == 1 || userChoice == 2)
+	if (UserChoice == 1 || UserChoice == 2)
 	{
-		/*while (!(EventList->IsEmpty()) && !(N_Execution_Missions->isEmpty()) && !(Waiting_E_Missions->isEmpty() && !(Waiting_P_Missions->IsEmpty))
-		{
-			ExecuteDay();
-			PrintEachDay();
-			if (userChoice == 1)
-				IO_Interface->InteractiveMode();
-			else IO_Interface->StepByStepMode();
-		}*/
+		
 		PrintEachDay();
-		if (userChoice == 1)
+		if (UserChoice == 1)
 			IO_Interface->InteractiveMode();
 		else IO_Interface->StepByStepMode();
 	}
 	else
 	{
-		IO_Interface->SilentMode();
+		if (SilentModeFlag) {
+			//Prints it once in the beginning of the simulation
+			IO_Interface->SilentMode();
+			SilentModeFlag = false;
+		}
 	}
+}
+
+void MasterStation::ReadUserChoice()
+{
+	IO_Interface->ReadUserChoice(UserChoice);
 }
 
 
@@ -602,7 +602,7 @@ void MasterStation::ExecuteDay() {
 	CheckupComplete();
 	Maint_Complete();
 	AssignMission();
-	cout << CurrentDay<< " ";
+	//FinalOutput();
 	CurrentDay++;
 	DailyCompletedCount = 0;
 	DailyCompletedCountE = 0;
