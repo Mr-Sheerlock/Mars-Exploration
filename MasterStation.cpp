@@ -1193,6 +1193,9 @@ void MasterStation::MoveFromWaitingToInExecution(Mission* mission, Rover* rover)
 //Moves rover to av
 void MasterStation::MoveFromCheckupToAvailable(Rover* R)
 {
+	//Resets the bool value
+	R->SetNeedCheck(false);
+
 	if (R->GetType() == 'P')
 	{
 		P_Rover* PRover = dynamic_cast<P_Rover*>(R);
@@ -1214,9 +1217,6 @@ void MasterStation::MoveFromCheckupToAvailable(Rover* R)
 //Moves rover to chck
 void MasterStation::MoveFromInExecutionToCheckup(Rover* TempRover)
 {
-	//reset the counter
-	TempRover->SetMissionsDone(0);
-	
 	if (TempRover->GetType() == 'P')
 	{
 		P_Rover* PRover = dynamic_cast<P_Rover*>(TempRover); //downcast it in order to access checkup duration, and then move it to the checkup list
