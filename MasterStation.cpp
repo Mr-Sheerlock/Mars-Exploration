@@ -379,7 +379,6 @@ void MasterStation::PrintEachDay()
 
 	int NExecMissP = NExecMiss - NExecMissE;
 
-	//TODO: Modify the function to include failed Rovers in the output
 	int FailedRovers = NExecRovs - NExecMiss;
 
 	IO_Interface->PrintInExecution(InExecution_M_Ids, InExecution_R_Ids, NExecMiss, NExecMissE, NExecMissP, N_Exectype, F_InExecution_R_Ids, FailedRovers, Failed_P_Rover, Failed_E_Rover, Ftype);
@@ -716,29 +715,35 @@ void MasterStation::AssignMission() {
 		else if (Available_E_Rovers->isEmpty() && Available_P_Rovers->isEmpty())
 		{
 			Waiting_E_Missions->Peek(emission);
+			//if the mission has been waiting for more than 5 days, search for a rover from maintainance
+			//check is only done on the first mission to preserve mission assignment criteria (emission of higher priority assigned first) 
 			if ((CurrentDay - emission->GetFormulationDay()) > 5)
 			{
 				Rover* rover;
 				GetRoverFromMaintenance(rover, 'E');
-				if (rover)
+				if (rover)//a suitable rover is found
 				{
 					Waiting_E_Missions->Dequeue(emission);
 					emission->AssignRover(rover);
 					MoveFromWaitingToInExecution(emission, rover);
 				}
-				else
+				else//no suitable rover found
 				{
+					//it is impossible to assign any other emission this day, flag is set to false to exit while loop 
 					flag = false;
 				}
 			}
 			else
 			{
-				flag = false;
+				flag = false;//to break from while loop
 			}
 		}
 	}
 	
 	//2-Assigning P-Missions
+
+	//if flag was set to falsee from first while loop, no available PRovers
+	//flag is reset to true to check mission's chance in getting assigned to a rover from maintainance if mission has waited long enough
 
 	flag = true;
 	while (!(Waiting_P_Missions->IsEmpty()) && flag)
@@ -757,25 +762,26 @@ void MasterStation::AssignMission() {
 		else
 		{
 			Waiting_P_Missions->Peek(pmission);
+			//checks if waiting days is greater than 5
 			if ((CurrentDay - pmission->GetFormulationDay()) > 5)
 			{
 				Rover* rover;
 				GetRoverFromMaintenance(rover, 'P');
-				if (rover)
+				if (rover)//a suitable rover was found
 				{
 					Waiting_P_Missions->Dequeue(pmission);
 					prover = dynamic_cast<P_Rover*>(rover);
 					pmission->AssignRover(prover);
 					MoveFromWaitingToInExecution(pmission, prover);
 				}
-				else
+				else//no suitable rover was found
 				{
-					flag = false;
+					flag = false;//to break from while loop
 				}
 			}
-			else
+			else//mission didn't wait long enough, it can wait for an available rover
 			{
-				flag = false;
+				flag = false; // to break from while loop
 			}
 		}
 	}
