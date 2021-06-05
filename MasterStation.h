@@ -198,7 +198,7 @@ public:
 
 
 
-	void CalculateStats(float& AvgWait, float& AvgExec);
+	bool CalculateStats(float& AvgWait, float& AvgExec);
 
 
 

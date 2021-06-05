@@ -49,6 +49,7 @@ public:
 	void WriteStats(float Avg_Wait, float Avg_Exec, ofstream& Output);
 
 	void WritePRoversWarning(ofstream& Output);
+	void WriteNoMissionsWarning(ofstream& Output);
 
 	void WriteCriticalWarning(ofstream& Output);
 
