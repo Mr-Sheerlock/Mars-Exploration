@@ -656,7 +656,15 @@ bool MasterStation::CheckLastDay() {
 		CalculateStats(AvgWait, AvgExec);
 		IO_Interface->WriteMissions(NMissionsE, N_Missions - NMissionsE, Output);
 		IO_Interface->WriteRovers(NRoversE, NRoversP, Output);
-		IO_Interface->WriteStats(AvgWait, AvgExec, Output);
+		if (CalculateStats(AvgWait, AvgExec))
+
+		{
+			IO_Interface->WriteStats(AvgWait, AvgExec, Output);
+		}
+		else {
+			IO_Interface->WriteNoMissionsWarning(Output);
+		}
+		return true;
 		return true;
 	}
 	return false;
@@ -1425,11 +1433,16 @@ void MasterStation::Checkfailed() {
 
 //Statistics
 //should be called at final day.
-void MasterStation::CalculateStats(float& AvgWait, float& AvgExec) 
+bool MasterStation::CalculateStats(float& AvgWait, float& AvgExec) 
 {
 
+	if (N_Missions == 0)
+	{
+		return false;
+	}
 	AvgWait = Total_Wait / N_Missions;
 	AvgExec = Total_InExecution / N_Missions;
+	return true;
 
 }
 

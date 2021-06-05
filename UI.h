@@ -50,6 +50,8 @@ public:
 
 	void WritePRoversWarning(ofstream& Output);
 
+	void WriteNoMissionsWarning(ofstream& Output);
+
 	void WriteCriticalWarning(ofstream& Output);
 
 	//2-To Console:

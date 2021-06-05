@@ -96,6 +96,11 @@ void UI::WritePRoversWarning(ofstream& Output)
 	Output << "There were no Polar Rovers, so no polar missions were formulated or executed! " <<endl;
 }
 
+void UI::WriteNoMissionsWarning(ofstream& Output)
+{
+	Output << "There were no missions." << endl;
+}
+
 void UI::WriteCriticalWarning(ofstream& Output)
 {
 	Output << "There were no Polar or Emergency Rovers, so simulation did not start! :D " << endl;
