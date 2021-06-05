@@ -67,9 +67,7 @@ public:
 
 	void PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type, int* F, int FCount, int FP, int FE, char* FType);
 
-	void PrintInCheckup(int* R, int count, int cE, int cP, char* type);
-
-	void PrintInMaint(int* R, int count, int mE, int mP, char* type);
+	void PrintEmergencyAndPolar(int* R, int count, int cE, int cP, char* type);
 
 	void PrintStatements(int choice, int x);
 

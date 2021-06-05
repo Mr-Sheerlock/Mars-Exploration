@@ -374,12 +374,9 @@ void MasterStation::PrintEachDay()
 	
 	//InExecution Missions/Rovers AND Failed Rovers
 
-	
 	IO_Interface->PrintStatements(3, NExecMiss);
 
 	int NExecMissP = NExecMiss - NExecMissE;
-
-	//TODO: Modify the function to include failed Rovers in the output
 	int FailedRovers = NExecRovs - NExecMiss;
 
 	IO_Interface->PrintInExecution(InExecution_M_Ids, InExecution_R_Ids, NExecMiss, NExecMissE, NExecMissP, N_Exectype, F_InExecution_R_Ids, FailedRovers, Failed_P_Rover, Failed_E_Rover, Ftype);
@@ -393,22 +390,22 @@ void MasterStation::PrintEachDay()
 	int CheckupRoversP = CheckupRovers - CheckupRoversE;
 
 	IO_Interface->PrintStatements(5, CheckupRovers);
-	IO_Interface->PrintInCheckup(InCheckupIds, CheckupRovers, CheckupRoversE, CheckupRoversP, InCheckuptype);
+	IO_Interface->PrintEmergencyAndPolar(InCheckupIds, CheckupRovers, CheckupRoversE, CheckupRoversP, InCheckuptype);
 
 	//Maintainance Rovers
 	int MaintRoversP = MaintRovers - MaintRoversE;
 	IO_Interface->PrintStatements(6, MaintRovers);
-	IO_Interface->PrintInMaint(InMaintIds, MaintRovers, MaintRoversE, MaintRoversP, InMaintType);
+	IO_Interface->PrintEmergencyAndPolar(InMaintIds, MaintRovers, MaintRoversE, MaintRoversP, InMaintType);
 
 	//CompletedMissions
 	int DailyCompletedCountP = DailyCompletedCount - DailyCompletedCountE;
 	
 	IO_Interface->PrintStatements(7, DailyCompletedCount);
-	IO_Interface->PrintInCheckup(DailyCompMissionsIDs, DailyCompletedCount, DailyCompletedCountE, DailyCompletedCountP, DailyCompMissionsType);
+	IO_Interface->PrintEmergencyAndPolar(DailyCompMissionsIDs, DailyCompletedCount, DailyCompletedCountE, DailyCompletedCountP, DailyCompMissionsType);
 
 	IO_Interface->PrintBreakLine();
 
-	//TODO: DONT FORGET TO DEALLOCATE THE MEMORY 
+	//DONT FORGET TO DEALLOCATE THE MEMORY 
 	
 	delete[] WaitingEIds;
 	delete[] WaitingPIds;
@@ -423,8 +420,6 @@ void MasterStation::PrintEachDay()
 	delete[] InCheckuptype;
 	delete[] InMaintIds;
 	delete[] InMaintType;
-
-
 }
 
 void MasterStation::TakeIdsFromWaitingE( int * Ids)
@@ -559,7 +554,7 @@ void MasterStation::TakeInfoFromInCheckup(int* id, char* type)
 		char x = rtemp->GetType();
 		id[i]=rtemp->GetID();
 		type[i]=x;
-		
+		i++;
 		temp.Enqueue(rtemp);
 	}
 	while (temp.Dequeue(rtemp))
@@ -578,7 +573,7 @@ void MasterStation::TakeInfoFromInMaint(int* id, char* type)
 		char x = rtemp->GetType();
 		id[i]=rtemp->GetID();
 		type[i]=x;
-		
+		i++;
 		temp.Enqueue(rtemp);
 	}
 	while (temp.Dequeue(rtemp))
@@ -586,11 +581,11 @@ void MasterStation::TakeInfoFromInMaint(int* id, char* type)
 		Maintainance_Rovers->Enqueue(rtemp, (rtemp->GetMaintCompletionDay()* -1));
 	}
 }
+
 void MasterStation::FinalOutput()
 {
 	if (UserChoice == 1 || UserChoice == 2)
 	{
-		
 		PrintEachDay();
 		if (UserChoice == 1)
 			IO_Interface->InteractiveMode();
@@ -711,29 +706,36 @@ void MasterStation::AssignMission() {
 		else if (Available_E_Rovers->isEmpty() && Available_P_Rovers->isEmpty())
 		{
 			Waiting_E_Missions->Peek(emission);
+			//if the mission has been waiting for more than 5 days, search for a rover from maintainance
+			//check is only done on the first mission to preserve mission assignment criteria (emission of higher priority assigned first) 
 			if ((CurrentDay - emission->GetFormulationDay()) > 5)
 			{
 				Rover* rover;
 				GetRoverFromMaintenance(rover, 'E');
-				if (rover)
+				if (rover)//a suitable rover is found
 				{
 					Waiting_E_Missions->Dequeue(emission);
 					emission->AssignRover(rover);
 					MoveFromWaitingToInExecution(emission, rover);
 				}
-				else
+				else//no suitable rover found 
 				{
+					//it is impossible to assign any other emission this day, flag is set to false to exit while loop 
 					flag = false;
 				}
 			}
-			else {
-				flag = false;
+			//next waiting mission has waited less than 5 days, mission can wait for a rover to be available 
+			else   
+			{
+				flag = false;//to break from while loop
 			}
 		}
 	}
 	
 	//2-Assigning P-Missions
 
+	//if flag was set to falsee from first while loop, no available PRovers
+	//flag is reset to true to check mission's chance in getting assigned to a rover from maintainance if mission has waited long enough 
 	flag = true;
 	while (!(Waiting_P_Missions->IsEmpty()) && flag)
 	{
@@ -750,25 +752,26 @@ void MasterStation::AssignMission() {
 		else
 		{
 			Waiting_P_Missions->Peek(pmission);
+			//checks if waiting days is greater than 5
 			if ((CurrentDay - pmission->GetFormulationDay()) > 5)
 			{
 				Rover* rover;
 				GetRoverFromMaintenance(rover, 'P');
-				if (rover)
+				if (rover)//a suitable rover was found
 				{
 					Waiting_P_Missions->Dequeue(pmission);
 					prover = dynamic_cast<P_Rover*>(rover);
 					pmission->AssignRover(prover);
 					MoveFromWaitingToInExecution(pmission, prover);
 				}
-				else
+				else//no suitable rover was found
 				{
-					flag = false;
+					flag = false;//to break from while loop
 				}
 			}
-			else
+			else//mission didn't wait long enough, it can wait for an available rover
 			{
-				flag = false;
+				flag = false;//to break from while loop
 			}
 		}
 	}
@@ -779,39 +782,39 @@ void MasterStation::AssignMission() {
 void MasterStation::CheckMissionComplete()
 {
 	//If a mission is completed:
-	// Call check rover arrival 
 	//print Mission Done,...etc
 	Mission* TempMission;
 	while (N_Execution_Missions->Peek(TempMission))
 	{
-		if (TempMission->GetCompletionDay() == CurrentDay)
+		if (TempMission->GetCompletionDay() == CurrentDay)//mission is completed
 		{
-			NExecMiss--;
-
 			N_Execution_Missions->Dequeue(TempMission);
+			TempMission->UnAssignRover();
+
+			//calculate important sums for the stats
 			Total_Wait = Total_Wait + TempMission->GetWaitingDays();
 			Total_InExecution = Total_InExecution + TempMission->GetExecutionDays();
-			TempMission->UnAssignRover();
 			
-			//Print Mission Done
+			//Write Mission Done info in the output file
 			IO_Interface->WriteEachDay(TempMission->GetCompletionDay(), TempMission->GetID(), TempMission->GetFormulationDay(), TempMission->GetWaitingDays(), TempMission->GetExecutionDays(), Output);
-
+			
+			//getting id and type to be used to print on console 
 			DailyCompMissionsIDs[DailyCompletedCount]=TempMission->GetID();
 			DailyCompMissionsType[DailyCompletedCount]=TempMission->GetTYP();
 			
+			//incrementing and decrementing suitable counters 
+			NExecMiss--;
 			DailyCompletedCount++;
 			if (TempMission->GetTYP() == 'E') {
 				DailyCompletedCountE++;
 				NExecMissE--;
 			}
-			
 		}
-			//First one didn't finish, do nothing
-		else {
+		else //First one didn't finish, do nothing 
+		{
 				return;
 		}
 	}
-
 }
 
 

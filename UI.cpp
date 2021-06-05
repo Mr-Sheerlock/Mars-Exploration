@@ -276,11 +276,11 @@ void UI::PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type,
 
 
 
-//Since the Rovers in Checkup are in a PQ that contains all types of Rovers
-//then we have to classify the rovers first before doing the operation
+//Since we have met the case where we have both types in the same list
+//then we have to classify each type first before doing the operation
 //Assume that R[] is an array that is filled blindly with all ID's irrespective of the types. 
 
-void UI::PrintInCheckup(int* R, int count, int cE, int cP, char* type)
+void UI::PrintEmergencyAndPolar(int* R, int count, int cE, int cP, char* type)
 {
 	int* ER = new int[cE]; int c1 = 0;
 	int* PR = new int[cP]; int c3 = 0;
@@ -299,28 +299,6 @@ void UI::PrintInCheckup(int* R, int count, int cE, int cP, char* type)
 	}
 	PrintEmergency(ER, cE);
 	PrintPolar(PR, cP);
-}
-
-
-void UI::PrintInMaint(int* R, int count, int mE, int mP, char* type)
-{
-	int* ER = new int[mE]; int c1 = 0;
-	int* PR = new int[mP]; int c3 = 0;
-	for (int i = 0; i < count; i++)
-	{
-		if (type[i] == 'E')
-		{
-			ER[c1] = R[i];
-			c1++;
-		}
-		else
-		{
-			PR[c3] = R[i];
-			c3++;
-		}
-	}
-	PrintEmergency(ER, mE);
-	PrintPolar(PR, mP);
 	delete[] ER;
 	delete[] PR;
 }
@@ -378,7 +356,7 @@ void UI::InteractiveMode()
 
 void UI::StepByStepMode()
 {
-	//Sleep(1000);
+	Sleep(1000);
 }
 
 

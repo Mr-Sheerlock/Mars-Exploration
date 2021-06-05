@@ -129,7 +129,6 @@ public:
 	void TakeIdsFromAvailableE(int* id);
 	void TakeIdsFromAvailableP(int* id);
 	void TakeInfoFromInCheckup(int* id, char* type);
-
 	void TakeInfoFromInMaint(int* id, char* type);
 	
 	void FinalOutput();	
