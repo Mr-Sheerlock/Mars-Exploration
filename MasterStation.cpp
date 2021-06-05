@@ -393,22 +393,25 @@ void MasterStation::PrintEachDay()
 	int CheckupRoversP = CheckupRovers - CheckupRoversE;
 
 	IO_Interface->PrintStatements(5, CheckupRovers);
-	IO_Interface->PrintInCheckup(InCheckupIds, CheckupRovers, CheckupRoversE, CheckupRoversP, InCheckuptype);
+	//IO_Interface->PrintInCheckup(InCheckupIds, CheckupRovers, CheckupRoversE, CheckupRoversP, InCheckuptype);
+	IO_Interface->PrintEmergencyAndPolar(InCheckupIds, CheckupRovers, CheckupRoversE, CheckupRoversP, InCheckuptype);
 
 	//Maintainance Rovers
 	int MaintRoversP = MaintRovers - MaintRoversE;
 	IO_Interface->PrintStatements(6, MaintRovers);
-	IO_Interface->PrintInMaint(InMaintIds, MaintRovers, MaintRoversE, MaintRoversP, InMaintType);
+	//IO_Interface->PrintInMaint(InMaintIds, MaintRovers, MaintRoversE, MaintRoversP, InMaintType);
+	IO_Interface->PrintEmergencyAndPolar(InMaintIds, MaintRovers, MaintRoversE, MaintRoversP, InMaintType);
 
 	//CompletedMissions
 	int DailyCompletedCountP = DailyCompletedCount - DailyCompletedCountE;
 	
 	IO_Interface->PrintStatements(7, DailyCompletedCount);
-	IO_Interface->PrintInCheckup(DailyCompMissionsIDs, DailyCompletedCount, DailyCompletedCountE, DailyCompletedCountP, DailyCompMissionsType);
+	//IO_Interface->PrintInCheckup(DailyCompMissionsIDs, DailyCompletedCount, DailyCompletedCountE, DailyCompletedCountP, DailyCompMissionsType);
+	IO_Interface->PrintEmergencyAndPolar(DailyCompMissionsIDs, DailyCompletedCount, DailyCompletedCountE, DailyCompletedCountP, DailyCompMissionsType);
 
 	IO_Interface->PrintBreakLine();
 
-	//TODO: DONT FORGET TO DEALLOCATE THE MEMORY 
+	//DONT FORGET TO DEALLOCATE THE MEMORY 
 	
 	delete[] WaitingEIds;
 	delete[] WaitingPIds;
@@ -559,7 +562,7 @@ void MasterStation::TakeInfoFromInCheckup(int* id, char* type)
 		char x = rtemp->GetType();
 		id[i]=rtemp->GetID();
 		type[i]=x;
-		
+		i++;
 		temp.Enqueue(rtemp);
 	}
 	while (temp.Dequeue(rtemp))
@@ -578,7 +581,7 @@ void MasterStation::TakeInfoFromInMaint(int* id, char* type)
 		char x = rtemp->GetType();
 		id[i]=rtemp->GetID();
 		type[i]=x;
-		
+		i++;
 		temp.Enqueue(rtemp);
 	}
 	while (temp.Dequeue(rtemp))
@@ -728,7 +731,8 @@ void MasterStation::AssignMission() {
 					flag = false;
 				}
 			}
-			else {
+			else
+			{
 				flag = false;
 			}
 		}
@@ -782,26 +786,28 @@ void MasterStation::AssignMission() {
 void MasterStation::CheckMissionComplete()
 {
 	//If a mission is completed:
-	// Call check rover arrival 
 	//print Mission Done,...etc
 	Mission* TempMission;
 	while (N_Execution_Missions->Peek(TempMission))
 	{
-		if (TempMission->GetCompletionDay() == CurrentDay)
+		if (TempMission->GetCompletionDay() == CurrentDay)//mission is completed
 		{
-			NExecMiss--;
-
 			N_Execution_Missions->Dequeue(TempMission);
+			//calculate important sums for the stats
 			Total_Wait = Total_Wait + TempMission->GetWaitingDays();
 			Total_InExecution = Total_InExecution + TempMission->GetExecutionDays();
+			
 			TempMission->UnAssignRover();
 			
-			//Print Mission Done
+			//Write Mission Done info in the output file
 			IO_Interface->WriteEachDay(TempMission->GetCompletionDay(), TempMission->GetID(), TempMission->GetFormulationDay(), TempMission->GetWaitingDays(), TempMission->GetExecutionDays(), Output);
-
+			
+			//getting id and type to be used to print on console 
 			DailyCompMissionsIDs[DailyCompletedCount]=TempMission->GetID();
 			DailyCompMissionsType[DailyCompletedCount]=TempMission->GetTYP();
 			
+			//incrementing and decrementing suitable counters
+			NExecMiss--;
 			DailyCompletedCount++;
 			if (TempMission->GetTYP() == 'E') {
 				DailyCompletedCountE++;
@@ -810,7 +816,8 @@ void MasterStation::CheckMissionComplete()
 			
 		}
 			//First one didn't finish, do nothing
-		else {
+		else 
+		{
 				return;
 		}
 	}
@@ -1096,8 +1103,8 @@ bool MasterStation::CheckMaint(Rover* rover)
 {
 	if (rover->GetHealth() <= 0)
 	{
-		return true;
 		rover->ResetMaintValues();
+		return true;
 	}
 	return false;
 }
