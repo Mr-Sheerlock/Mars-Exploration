@@ -699,6 +699,7 @@ void MasterStation::AssignMission() {
 			Waiting_E_Missions->Dequeue(emission);
 			emission->AssignRover(E);
 			MoveFromWaitingToInExecution(emission, E);
+			AvRoversE--;
 		}
 		//Else look for a PRover
 		else if (Available_E_Rovers->isEmpty() && Available_P_Rovers->Dequeue(P))
@@ -706,6 +707,7 @@ void MasterStation::AssignMission() {
 			Waiting_E_Missions->Dequeue(emission);
 			emission->AssignRover(P);
 			MoveFromWaitingToInExecution(emission, P);
+			AvRoversP--;
 		}
 		//If both are empty start checking the maintainance
 		else if (Available_E_Rovers->isEmpty() && Available_P_Rovers->isEmpty())
@@ -745,6 +747,7 @@ void MasterStation::AssignMission() {
 			Waiting_P_Missions->Dequeue(pmission);
 			pmission->AssignRover(prover);
 			MoveFromWaitingToInExecution(pmission, prover);
+			AvRoversP--;
 		}
 		//if there isn't a polar rover, try to see maintainance
 		else
@@ -1011,13 +1014,11 @@ bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 		//Min Speed = 1
 		// If only 1 day is left to complete the maintenance
 		Queue <Rover*>* TempQ = new Queue<Rover*>;
-		Rover* rover = nullptr;
 		P_Rover* PolarRover = nullptr;
 		E_Rover* EmergencyRover = nullptr;
 		if (Type == 'P')
 		{
 			//search for polar only
-			cout << "Lol xd";
 			SearchForPolar(PolarRover, TempQ);
 			if (!PolarRover)
 			{
@@ -1029,8 +1030,10 @@ bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 			{
 				//Return to maintenance and find rover
 				ReturnToMaint_FindRover(PolarRover, TempQ);
+				//Reset Maintenance values
+				PolarRover->ResetMaintValues();
 				//Half the speed
-				PolarRover->SetSpeed(rover->GetSpeed() / 2);
+				PolarRover->SetSpeed(PolarRover->GetSpeed() / 2);
 				RoverNeeded = PolarRover;
 				MaintRovers--;
 				return true;
@@ -1044,8 +1047,10 @@ bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 			{
 				//Return to maintenance and find rover
 				ReturnToMaint_FindRover(EmergencyRover, TempQ);
+				//Reset Maintenance values
+				PolarRover->ResetMaintValues();
 				//Half the speed
-				EmergencyRover->SetSpeed(rover->GetSpeed() / 2);
+				EmergencyRover->SetSpeed(EmergencyRover->GetSpeed() / 2);
 				RoverNeeded = EmergencyRover;
 				MaintRovers--;
 				MaintRoversE--;
@@ -1054,8 +1059,10 @@ bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 			else if (PolarRover)
 			{
 				ReturnToMaint_FindRover(PolarRover, TempQ);
+				//Reset Maintenance values
+				PolarRover->ResetMaintValues();
 				//Half the speed
-				PolarRover->SetSpeed(rover->GetSpeed() / 2);
+				PolarRover->SetSpeed(PolarRover->GetSpeed() / 2);
 				RoverNeeded = PolarRover;
 				MaintRovers--;
 				return true;
@@ -1181,12 +1188,6 @@ void MasterStation::MoveFromWaitingToInExecution(Mission* mission, Rover* rover)
 	else {
 		WaitingMissionsP--;
 
-	}
-	if (rover->GetType() == 'E') {
-		AvRoversE--;
-	}
-	else {
-		AvRoversP--;
 	}
 }
 

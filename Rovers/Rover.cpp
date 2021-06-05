@@ -155,21 +155,12 @@ void Rover::SetMaintCompletionDay(int MCD)
 
 void Rover::UpdateHealth()
 {
-	if (TotalMDur > 20)
-	{
-		Health -= 30;
-		TotalMDur = 0;
-	}
-	if (TotalDist > 1500)
-	{
-		Health -= 30;
-		TotalDist = 0;
-	}
-	if (HighSigMissNum > 4)
-	{
-		Health -= 30;
-		HighSigMissNum = 0;
-	}
+	Health = Health - (TotalMDur / 20) * 30;
+	Health = Health - (TotalDist / 1200) * 30;
+	Health = Health - (HighSigMissNum / 4) * 30;
+	TotalMDur = 0;
+	TotalDist = 0;
+	HighSigMissNum = 0;
 }
 
 int Rover::GetTotalDist()
