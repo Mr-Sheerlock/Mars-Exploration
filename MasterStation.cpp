@@ -47,7 +47,7 @@ MasterStation::MasterStation()
 	TotalCompleted = 0;
 	////////////////////////////////FAILURE///////////////////////////////////////////////
 
-	ProbabilityOFfailure = 0; // in percent
+	ProbabilityOFfailure = 5; // in percent
 
 	//////////////////////////////////////////////////////////////////////////////////////
 	
@@ -259,6 +259,12 @@ void MasterStation::ReadEvents()
 
 bool MasterStation::CheckConsistency() {
 	
+	//if Probability of Failure =100%
+	if (ProbabilityOFfailure == 100) {
+		IO_Interface->WriteProbabilityWarning(Output);
+		return false;
+	}
+
 	//We here process the corner case where there are missions but no corresponding rovers
 
 	//If there are no rovers, return false to end the simulation abruptly
@@ -1346,8 +1352,6 @@ void MasterStation::Checkfailed() {
 		
 		double MissionFailP = CalculateProbability(ProbabilityOFfailure, MissionSpan);
 		
-		cout << "The Daily Mission Span is: " << MissionSpan<<endl;
-		cout << "The Daily Mission FailP is: " << MissionFailP<<endl;
 
 
 		double randomF = ((rand() % (10000)) / 100.0); //generates a random float from 0 to 100 With Percision up to TWO decimal places
@@ -1363,7 +1367,6 @@ void MasterStation::Checkfailed() {
 		//if it failed 
 		if (randomF<MissionFailP) {
 			
-			cout << "FAILEDDDDDD!" << endl;
 			int SD_o = M->GetStartingDay();
 			int MD_o = M->GetDuration();
 			//restart FormulationDay
@@ -1494,5 +1497,4 @@ double MasterStation:: CalculateProbability(int DesiredFailure, int Duration) {
 	double DailyFailure = 100 - DailySuccess;  //in percent
 
 	return DailyFailure;
-	//cout << "DAILY FAILURE: " << DailyFailure;
 }

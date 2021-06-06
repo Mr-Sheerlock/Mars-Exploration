@@ -19,7 +19,4 @@ int main() {
 			MS.ExecuteDay();
 		}
 	}
-	else {
-		cout << "There were no Polar or Emergency Rovers, so simulation did not start! :D ";
-	}
 }

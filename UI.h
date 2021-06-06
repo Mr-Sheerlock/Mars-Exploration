@@ -54,6 +54,8 @@ public:
 
 	void WriteCriticalWarning(ofstream& Output);
 
+	void WriteProbabilityWarning(ofstream& Output);
+
 	//2-To Console:
 
 	//prints the given parameter according to the format specified for emergency

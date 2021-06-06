@@ -12,6 +12,8 @@ class Event;
 
 class MasterStation {
 	
+
+
 	int CurrentDay;
 
 

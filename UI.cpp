@@ -104,6 +104,13 @@ void UI::WriteNoMissionsWarning(ofstream& Output)
 void UI::WriteCriticalWarning(ofstream& Output)
 {
 	Output << "There were no Polar or Emergency Rovers, so simulation did not start! :D " << endl;
+	cout << "There were no Polar or Emergency Rovers, so simulation did not start! :D ";
+}
+
+void UI::WriteProbabilityWarning(ofstream& Output)
+{
+	Output << "The Probability of Failure is 100, so simulation did not start!" << endl;
+	cout << "The Probability of Failure is 100, so simulation did not start!" << endl;
 }
 
 
@@ -362,7 +369,7 @@ void UI::InteractiveMode()
 
 void UI::StepByStepMode()
 {
-	//Sleep(1000);
+	Sleep(1000);
 }
 
 
