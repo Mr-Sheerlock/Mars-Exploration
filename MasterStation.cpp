@@ -44,6 +44,7 @@ MasterStation::MasterStation()
 	DailyCompletedCount = 0;
 	DailyCompletedCountE = 0;
 
+	TotalCompleted = 0;
 	////////////////////////////////FAILURE///////////////////////////////////////////////
 
 	ProbabilityOFfailure = 0; // in percent
@@ -622,10 +623,10 @@ void MasterStation::ExecuteDay() {
 	//Proposed Order: Events->Rovers Arrival->Rovers Checkup-> Rovers Maintainance->
 	//->Missions Assignment
 
-	if (NExecMiss!=0) {
-		DailyCompMissionsIDs= new int [NExecMiss];
-		DailyCompMissionsType = new char[NExecMiss];
-	}
+		//Very important change handling the corner case where a mission might finish in the sama day 
+		DailyCompMissionsIDs= new int [N_Missions- TotalCompleted];
+		DailyCompMissionsType = new char[N_Missions- TotalCompleted];
+	
 	
 	ExecuteEvents();
 	Checkfailed();
@@ -823,6 +824,7 @@ void MasterStation::CheckMissionComplete()
 			//incrementing and decrementing suitable counters
 			NExecMiss--;
 			DailyCompletedCount++;
+			TotalCompleted++;
 			if (TempMission->GetTYP() == 'E') {
 				DailyCompletedCountE++;
 				NExecMissE--;
@@ -1189,10 +1191,38 @@ void MasterStation::MoveFromWaitingToInExecution(Mission* mission, Rover* rover)
 	CalculateArrive2Target(rover, mission->GetTLOC());
 	//CD=ED+WD+FD
 	int CD = (2 * rover->GetArrive2Target() + mission->GetDuration()) + CurrentDay ;
+	
+	//if the mission finishes the sameDay
+	if (CD == CurrentDay) {
+
+			//calculate important sums for the stats
+			Total_Wait = Total_Wait + mission->GetWaitingDays();
+
+			//Write Mission Done info in the output file
+			IO_Interface->WriteEachDay(CurrentDay, mission->GetID(), mission->GetFormulationDay(), CurrentDay-mission->GetFormulationDay(), 0, Output);
+
+			//getting id and type to be used to print on console 
+			DailyCompMissionsIDs[DailyCompletedCount] = mission->GetID();
+			DailyCompMissionsType[DailyCompletedCount] = mission->GetTYP();
+
+			//incrementing and decrementing suitable counters
+			DailyCompletedCount++;
+			TotalCompleted++;
+			if (mission->GetTYP() == 'E') {
+				DailyCompletedCountE++;
+				WaitingMissionsE--;
+			}
+			else {
+				WaitingMissionsP--;
+
+			}
+			return;
+	}
+	
 	mission->SetCompletionDay(CD);
 
 	rover->SetCompletionDay(CD);
-	
+
 	mission->SetExecutionDays(2 * rover->GetArrive2Target() + mission->GetDuration());
 
 	mission->SetWaitingDays(CurrentDay - mission->GetFormulationDay());

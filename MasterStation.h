@@ -17,7 +17,7 @@ class MasterStation {
 
 	//Stats
 	//Missions
-	int N_Missions;
+	int N_Missions; //Number of missions
 	int  NMissionsE;
 	
 	int WaitingMissionsP, WaitingMissionsE;
@@ -39,6 +39,8 @@ class MasterStation {
 	int NExecRovs;
 
 	int DailyCompletedCount,DailyCompletedCountE;
+
+	int TotalCompleted;
 
 	int Failed_P_Rover, Failed_E_Rover;
 
