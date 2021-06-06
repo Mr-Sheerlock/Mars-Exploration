@@ -405,14 +405,14 @@ void MasterStation::PrintEachDay()
 	//Maintainance Rovers
 	int MaintRoversP = MaintRovers - MaintRoversE;
 	IO_Interface->PrintStatements(6, MaintRovers);
-	//IO_Interface->PrintInMaint(InMaintIds, MaintRovers, MaintRoversE, MaintRoversP, InMaintType);
+	
 	IO_Interface->PrintEmergencyAndPolar(InMaintIds, MaintRovers, MaintRoversE, MaintRoversP, InMaintType);
 
 	//CompletedMissions
 	int DailyCompletedCountP = DailyCompletedCount - DailyCompletedCountE;
 	
 	IO_Interface->PrintStatements(7, DailyCompletedCount);
-	//IO_Interface->PrintInCheckup(DailyCompMissionsIDs, DailyCompletedCount, DailyCompletedCountE, DailyCompletedCountP, DailyCompMissionsType);
+	
 	IO_Interface->PrintEmergencyAndPolar(DailyCompMissionsIDs, DailyCompletedCount, DailyCompletedCountE, DailyCompletedCountP, DailyCompMissionsType);
 
 	IO_Interface->PrintBreakLine();

@@ -15,7 +15,7 @@ Rover::Rover(int id, float s)
 
 	CheckUpCompletionDay = -50;
 	NeedsCheckup = 0;
-	//AssignedMission = nullptr;
+	AssignedMission = nullptr;
 }
 
 
