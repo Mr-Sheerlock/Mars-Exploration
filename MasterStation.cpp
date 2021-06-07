@@ -1193,6 +1193,7 @@ void MasterStation::DoesItNeedCheckUp(Rover* R)
 //Moves both a mission and rover to InExecution
 void MasterStation::MoveFromWaitingToInExecution(Mission* mission, Rover* rover)
 {
+	mission->SetStartingDay(CurrentDay);
 	rover->SetAssignedMission(mission);
 	CalculateArrive2Target(rover, mission->GetTLOC());
 	//CD=ED+WD+FD
@@ -1200,7 +1201,7 @@ void MasterStation::MoveFromWaitingToInExecution(Mission* mission, Rover* rover)
 	
 	//if the mission finishes the sameDay
 	if (CD == CurrentDay) {
-
+			
 			//calculate important sums for the stats
 			Total_Wait = Total_Wait + mission->GetWaitingDays();
 
@@ -1225,6 +1226,8 @@ void MasterStation::MoveFromWaitingToInExecution(Mission* mission, Rover* rover)
 			return;
 	}
 	
+
+
 	mission->SetCompletionDay(CD);
 
 	rover->SetCompletionDay(CD);
@@ -1326,7 +1329,6 @@ void MasterStation::MoveFromInExecutionToMaintenance(Rover* R)
 }
 
 
-
 //Getters
 
 //Failure
@@ -1366,7 +1368,6 @@ void MasterStation::Checkfailed() {
 
 		//if it failed 
 		if (randomF<MissionFailP) {
-			
 			int SD_o = M->GetStartingDay();
 			int MD_o = M->GetDuration();
 			//restart FormulationDay
@@ -1399,6 +1400,8 @@ void MasterStation::Checkfailed() {
 			//first get the corresponding rover 
 			R = M->GetAssignedRover();
 			
+			M->UnAssignRover();
+
 			if (R->GetType() == 'E') {
 				Failed_E_Rover++;
 			}
@@ -1406,7 +1409,9 @@ void MasterStation::Checkfailed() {
 				Failed_P_Rover++;
 			}
 
-			R->SetAssignedMission(nullptr);
+			 R->SetAssignedMission(nullptr);
+			 Mission* m = R->GetAssignedMission();
+
 			R->SetNeedCheck(true); // it will need checkup upon arrival
 			
 			int NewCompletionlDay = R->GetCompletionDay(); //assume it's unchanged
@@ -1422,7 +1427,7 @@ void MasterStation::Checkfailed() {
 				R->SetCompletionDay(NewCompletionlDay);
 			} 
 			//2-if it was on the location
-			else if (CurrentDay > SD_o + Arrive2Target && CurrentDay < SD_o + Arrive2Target + MD_o) {
+			else if (CurrentDay >= SD_o + Arrive2Target && CurrentDay <= SD_o + Arrive2Target + MD_o) {
 
 				//Compday= Current+ Arrive2Target
 
@@ -1461,7 +1466,6 @@ void MasterStation::Checkfailed() {
 	}
 
 }
-
 
 
 //Statistics
