@@ -1028,7 +1028,7 @@ void MasterStation::ReturnToMaint_FindRover(Rover* RoverToFind, Queue<Rover*>* T
 void MasterStation::CalculateArrive2Target(Rover* rover, int Tloc)
 {
 	float speed = (float)rover->GetSpeed();
-	int time = Tloc / speed;
+	int time = ceil(Tloc / speed);
 	int timeindays = ceil(time / 25);
 	rover->SetArrive2Target(timeindays);
 }
@@ -1225,13 +1225,19 @@ void MasterStation::MoveFromWaitingToInExecution(Mission* mission, Rover* rover)
 			TotalCompleted++;
 			if (mission->GetTYP() == 'E') {
 				DailyCompletedCountE++;
-				WaitingMissionsE--;
-			}
+				WaitingMissionsE--; 
+				Available_E_Rovers->Enqueue((E_Rover*)rover,rover->GetSpeed());
+				AvRoversE++;
+			}				
 			else {
 				WaitingMissionsP--;
-
+				Available_P_Rovers->Enqueue((P_Rover*)rover, rover->GetSpeed());
+				AvRoversP++;
 			}
+			
+
 			return;
+			
 	}
 	
 
