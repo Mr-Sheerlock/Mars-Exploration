@@ -1150,6 +1150,7 @@ void MasterStation::Maint_Complete()
 			{
 				Available_E_Rovers->Enqueue((E_Rover*)Temp, Temp->GetSpeed());
 				AvRoversE++;
+				MaintRoversE--;
 			}
 			if (Maintainance_Rovers->isEmpty())
 			{
