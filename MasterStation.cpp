@@ -1084,7 +1084,7 @@ bool MasterStation::GetRoverFromMaintenance(Rover*& RoverNeeded, char Type)
 				//Return to maintenance and find rover
 				ReturnToMaint_FindRover(EmergencyRover, TempQ);
 				//Reset Maintenance values
-				PolarRover->ResetMaintValues();
+				EmergencyRover->ResetMaintValues();
 				//Half the speed
 				EmergencyRover->SetSpeed(EmergencyRover->GetSpeed() / 2);
 				RoverNeeded = EmergencyRover;
@@ -1376,7 +1376,6 @@ void MasterStation::Checkfailed() {
 
 		//if it failed 
 		if (randomF<MissionFailP) {
-
 
 			int SD_o = M->GetStartingDay();
 			int MD_o = M->GetDuration();
