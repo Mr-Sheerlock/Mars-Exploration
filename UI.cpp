@@ -276,8 +276,8 @@ void UI::PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type,
 			c3++;
 		}
 	}
-	PrintMissionsAndRovers(EM, ER, cE, PF, FP, 'E');
-	PrintMissionsAndRovers(PM, PR, cP, EF, FE, 'P');
+	PrintMissionsAndRovers(EM, ER, cE, EF, FE, 'E');
+	PrintMissionsAndRovers(PM, PR, cP, PF, FP, 'P');
 	delete[] EM;
 	delete[] ER;
 	delete[] PM;
