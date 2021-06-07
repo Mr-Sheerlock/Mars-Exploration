@@ -247,7 +247,8 @@ void UI::PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type,
 
 	int* EM = new int[cE]; int* ER = new int[cE]; int c1 = 0;
 	int* PM = new int[cP]; int* PR = new int[cP]; int c3 = 0;
-	int* PF = new int[FP]; int* EF = new int[FE]; int c4 = 0;
+	int* PF = new int[FP]; int* EF = new int[FE]; int c4 = 0; int c2 = 0;
+
 	for (int i = 0; i < FCount; i++)
 	{
 		if (FType[i] == 'P')
@@ -257,8 +258,8 @@ void UI::PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type,
 		}
 		else
 		{
-			EF[c4] = F[i];
-			c4++;
+			EF[c2] = F[i];
+			c2++;
 		}
 	}
 	for (int i = 0; i < count; i++)
@@ -282,7 +283,7 @@ void UI::PrintInExecution(int* M, int* R, int count, int cE, int cP, char* type,
 	delete[] ER;
 	delete[] PM;
 	delete[] PR;
-	delete[] PF;
+	delete[] PF; //PF: Polar Failure
 	delete[] EF;
 }
 

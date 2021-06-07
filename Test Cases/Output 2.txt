@@ -1,0 +1,10 @@
+There were no Polar Rovers, so no polar missions were formulated or executed! 
+CD   ID   FD   WD   ED
+6    3    1    0    5    
+12   5    2    0    10   
+13   1    1    0    12   
+16   7    5    0    11   
+23   9    9    0    14   
+Missions: 10 [P: 5,E: 5]
+Rovers: 4    [P: 0,E: 4]
+Avg Wait = 0, Avg Exec = 5.2

@@ -320,13 +320,17 @@ void MasterStation::PrintEachDay()
 		InExecution_M_Ids = new int[NExecMiss];
 		InExecution_R_Ids = new int[NExecMiss]; //we assume that they are the same size and handle the failed mission rovers in another array
 
-		F_InExecution_R_Ids = new int[NExecRovs - NExecMiss]; //Rovers' numbers are always higher	than missions
-		Ftype = new char[NExecRovs - NExecMiss]; //difference is the number of rovers who has failed missions
+		int NF = NExecRovs - NExecMiss;
+
+		F_InExecution_R_Ids = new int[NF]; //Rovers' numbers are always higher	than missions
+		Ftype = new char[NF]; //difference is the number of rovers who has failed missions
 
 		N_Exectype = new char[NExecMiss];
 
 
 		TakeInfoFromInExecution(InExecution_M_Ids, InExecution_R_Ids, N_Exectype, F_InExecution_R_Ids, Ftype);
+
+		
 	}
 	else {
 		//in this case, all the rovers are failed rovers
@@ -487,9 +491,12 @@ void MasterStation::TakeInfoFromInExecution( int* M, int* R, char* RM, int* FR, 
 				RM[i] = tempmission->GetTYP();
 				i++;
 			}//if rover is getting back from a failed mission
+			//if rover has failed
 			else {
+				
 				FR[j] = temprover->GetID();
 				FT[j] = temprover->GetType();
+
 				j++;
 			}
 
@@ -1369,6 +1376,8 @@ void MasterStation::Checkfailed() {
 
 		//if it failed 
 		if (randomF<MissionFailP) {
+
+
 			int SD_o = M->GetStartingDay();
 			int MD_o = M->GetDuration();
 			//restart FormulationDay
