@@ -194,5 +194,5 @@ void Rover::ResetMaintValues()
 	TotalMDur = 0;
 	HighSigMissNum = 0;
 	MaintCompletionDay = 0;
-	Health = 100;
+	Health = 90;
 }
